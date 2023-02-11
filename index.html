@@ -43,6 +43,7 @@
             this.load.image('ground', 'assets/platform.png');
             this.load.image('star', 'assets/star.png');
             this.load.image('bomb', 'assets/bomb.png');
+            this.load.image('swatter', 'assets/swatter.png');
             this.load.spritesheet('dude',
                 'assets/dude.png',
                 { frameWidth: 32, frameHeight: 48 }
@@ -69,6 +70,10 @@
                 bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
 
             }
+        }
+
+        function swatBug(swatter, star) {
+            star.disableBody(true, true);
         }
 
         function hitBomb(player, bomb) {
@@ -136,7 +141,9 @@
             stars.children.iterate(function (child) {
                 changeVelocity(child);
                 child.body.setCollideWorldBounds(true);
-            
+                // child.setInteractive().on("pointerdown", function () {
+                //     console.log("clicked!");
+                // });
             });
 
             this.physics.add.collider(stars, platforms);
@@ -149,6 +156,13 @@
             this.physics.add.collider(bombs, platforms);
 
             this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+            // this.input.setDefaultCursor('url(/assets/swatter.png), pointer');
+            // this.input.on('pointerdown', function(pointer) {
+            //     console.log("pointer", pointer);
+            // });
+            swatter = this.physics.add.sprite(400, 300, 'swatter');
+            this.physics.add.overlap(swatter, stars, swatBug, null, this);
         }
 
         function update() {
@@ -172,7 +186,13 @@
             if (cursors.up.isDown && player.body.touching.down) {
                 player.setVelocityY(-630);
             }
-
+            const pointer = this.input.activePointer;
+            swatter.setPosition(pointer.x, pointer.y + 16);
+            if (pointer.isDown) {
+                stars.children.iterate(function(star) {
+                    // console.log("star", star);
+                });
+            }
         }
 
     </script>
