@@ -162,8 +162,8 @@
             this.input.on('pointerup', function(pointer) {
                 swatter.anims.play('swatting', true);
                 const pos = swatter.getBounds();
-                pos.height = 4;
-                pos.width = 4;
+                pos.height = 16;
+                pos.width = 16;
                 pos.x = pos.x + 8;
                 pos.y = pos.y + 8;
                 stars.children.iterate(function(star) {
