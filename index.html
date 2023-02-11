@@ -134,7 +134,7 @@
             stars = this.physics.add.group({
                 key: 'star',
                 repeat: 11,
-                setXY: { x: 12, y: 0, stepX: 70 }
+                setXY: { x: 12, y: 100, stepX: 70 }
             });
 
             stars.children.iterate(function (child) {
@@ -161,8 +161,13 @@
             });
             this.input.on('pointerup', function(pointer) {
                 swatter.anims.play('swatting', true);
+                const pos = swatter.getBounds();
+                pos.height = 4;
+                pos.width = 4;
+                pos.x = pos.x + 8;
+                pos.y = pos.y + 8;
                 stars.children.iterate(function(star) {
-                    if(Phaser.Geom.Intersects.RectangleToRectangle(swatter.getBounds(), star.getBounds())) {
+                    if(Phaser.Geom.Intersects.RectangleToRectangle(pos, star.getBounds())) {
                         star.disableBody(true, true);
                     }
                 });
