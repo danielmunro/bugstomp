@@ -72,8 +72,8 @@
             }
         }
 
-        function swatBug(swatter, star) {
-            star.disableBody(true, true);
+        function overlapBug(swatter, bug) {
+            bug.overlap = true;
         }
 
         function hitBomb(player, bomb) {
@@ -162,7 +162,8 @@
             //     console.log("pointer", pointer);
             // });
             swatter = this.physics.add.sprite(400, 300, 'swatter');
-            this.physics.add.overlap(swatter, stars, swatBug, null, this);
+            this.physics.add.overlap(swatter, stars, overlapBug, null, this);
+            swatter.body.setSize(32, 32, 0, 0);
         }
 
         function update() {
@@ -190,7 +191,9 @@
             swatter.setPosition(pointer.x, pointer.y + 16);
             if (pointer.isDown) {
                 stars.children.iterate(function(star) {
-                    // console.log("star", star);
+                    if (star.overlap) {
+                        star.disableBody(true, true);
+                    }
                 });
             }
         }
