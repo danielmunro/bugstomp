@@ -40,39 +40,11 @@
 
         function preload() {
             this.load.image('sky', 'assets/sky.png');
-            this.load.image('ground', 'assets/platform.png');
             this.load.image('star', 'assets/star.png');
-            this.load.image('bomb', 'assets/bomb.png');
             this.load.spritesheet('hand', 
                 'assets/swatter.png', 
                 { frameWidth: 32, frameHeight: 48 }
                 );
-            this.load.spritesheet('dude',
-                'assets/dude.png',
-                { frameWidth: 32, frameHeight: 48 }
-            );
-        }
-
-        function collectStar(player, star) {
-            star.disableBody(true, true);
-
-            score += 10;
-            scoreText.setText('Score: ' + score);
-
-            if (stars.countActive(true) === 0) {
-                stars.children.iterate(function (child) {
-                    child.enableBody(true, child.x, 0, true, true);
-                    changeVelocity(child);
-                });
-
-                var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-                var bomb = bombs.create(x, 16, 'bomb');
-                bomb.setBounce(1);
-                bomb.setCollideWorldBounds(true);
-                bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-
-            }
         }
 
         function changeVelocity(star) {
@@ -83,16 +55,29 @@
             }
         }
 
+        function swatBug(bug) {
+            bug.disableBody(true, true);
+            score += 10;
+            scoreText.setText('Score: ' + score);
+
+            if (bugs.countActive(true) === 0) {
+                bugs.children.iterate(function (child) {
+                    child.enableBody(true, child.x, 0, true, true);
+                    changeVelocity(child);
+                });
+            }
+        }
+
         function create() {
             this.add.image(400, 300, 'sky');
 
-            stars = this.physics.add.group({
+            bugs = this.physics.add.group({
                 key: 'star',
                 repeat: 11,
                 setXY: { x: 12, y: 100, stepX: 70 }
             });
 
-            stars.children.iterate(function (child) {
+            bugs.children.iterate(function (child) {
                 changeVelocity(child);
                 child.body.setCollideWorldBounds(true);
             });
@@ -114,9 +99,9 @@
                 pos.width = 16;
                 pos.x = pos.x + 8;
                 pos.y = pos.y + 8;
-                stars.children.iterate(function(star) {
-                    if(Phaser.Geom.Intersects.RectangleToRectangle(pos, star.getBounds())) {
-                        star.disableBody(true, true);
+                bugs.children.iterate(function(bug) {
+                    if(Phaser.Geom.Intersects.RectangleToRectangle(pos, bug.getBounds())) {
+                        swatBug(bug);
                     }
                 });
             });
