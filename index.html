@@ -75,16 +75,6 @@
             }
         }
 
-        function hitBomb(player, bomb) {
-            this.physics.pause();
-
-            player.setTint(0xff0000);
-
-            player.anims.play('turn');
-
-            gameOver = true;
-        }
-
         function changeVelocity(star) {
             if (star.active) {
                 star.setVelocity(Phaser.Math.Between(-100, 100), Phaser.Math.Between(-100, 100));
