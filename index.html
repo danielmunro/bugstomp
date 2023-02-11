@@ -93,8 +93,9 @@
                 child.anims.play('fly', true);
             });
 
-
-            scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+            const fontStyle = { fontSize: '32px', fill: '#000' };
+            scoreText = this.add.text(16, 16, 'score: 0', fontStyle);
+            livesText = this.add.text(16, 48, 'lives: 3', fontStyle);
 
             bombs = this.physics.add.group();
 
