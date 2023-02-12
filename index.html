@@ -39,6 +39,10 @@
         var score = 0;
         var scoreText;
         var bugs;
+        var lives = 3;
+        var gameOver = false;
+        const intervals = [];
+        const timeouts = [];
 
         function preload() {
             this.load.image('sky', 'assets/sky.png');
@@ -46,7 +50,11 @@
             this.load.spritesheet('fly', 
                 'assets/fly.png', 
                 { frameWidth: 32, frameHeight: 32 }
-                );
+            );
+            this.load.spritesheet('fly-attacking', 
+                'assets/fly-attacking.png', 
+                { frameWidth: 32, frameHeight: 32 }
+            );
             this.load.spritesheet('hand', 
                 'assets/swatter.png', 
                 { frameWidth: 32, frameHeight: 48 }
@@ -57,7 +65,7 @@
             if (bug.active) {
                 bug.setVelocity(Phaser.Math.Between(-150, 150), Phaser.Math.Between(-150, 150));
                 bug.body.setBounce(Phaser.Math.FloatBetween(0.5, 1));
-                setTimeout(() => changeVelocity(bug), Phaser.Math.Between(1000, 4000));
+                timeouts.push(setTimeout(() => changeVelocity(bug), Phaser.Math.Between(1000, 4000)));
             }
         }
 
@@ -77,6 +85,23 @@
             changeVelocity(fly);
             fly.body.setCollideWorldBounds(true);
             fly.anims.play('fly', true);
+            timeouts.push(setTimeout(() => {
+                if (fly.active) {
+                    fly.anims.play('fly-attacking', true);
+                    timeouts.push(setTimeout(() => {
+                        if (fly.active) {
+                            fly.disableBody(true, true);
+                            if (lives < 1) {
+                                phaser.physics.pause();
+                                gameOver = true;
+                                return;
+                            }
+                            lives -= 1;
+                            livesText.setText(`lives: ${lives}`);
+                        }
+                    }, 3000));
+                }
+            }, 4000));
         }
 
         function create() {
@@ -88,11 +113,17 @@
                 frameRate: 20,
                 repeat: -1,
             });
-            setInterval(() => createFly(this), 1000);
+            this.anims.create({
+                key: 'fly-attacking',
+                frames: this.anims.generateFrameNumbers('fly-attacking', {start: 0, end: 1}),
+                frameRate: 20,
+                repeat: -1,
+            });
+            intervals.push(setInterval(() => createFly(this), 3000));
 
             const fontStyle = { fontSize: '32px', fill: '#000' };
             scoreText = this.add.text(16, 16, 'score: 0', fontStyle);
-            livesText = this.add.text(16, 48, 'lives: 3', fontStyle);
+            livesText = this.add.text(16, 48, `lives: ${lives}`, fontStyle);
 
             bombs = this.physics.add.group();
 
@@ -112,7 +143,6 @@
                 pos.x = pos.x + 8;
                 pos.y = pos.y + 8;
                 bugs.children.iterate(function(bug) {
-                    console.log("bug", bug);
                     if(Phaser.Geom.Intersects.RectangleToRectangle(pos, bug.getBounds())) {
                         swatBug(bug);
                     }
@@ -122,6 +152,11 @@
         }
 
         function update() {
+            if (gameOver) {
+                intervals.forEach((interval) => clearInterval(interval));
+                timeouts.forEach((timeout) => clearTimeout(timeout));
+                return;
+            }
             const pointer = this.input.activePointer;
             swatter.setPosition(pointer.x, pointer.y + 16);
         }
