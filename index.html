@@ -38,6 +38,7 @@
         var game = new Phaser.Game(config);
         var score = 0;
         var scoreText;
+        var bugs;
 
         function preload() {
             this.load.image('sky', 'assets/sky.png');
@@ -73,27 +74,24 @@
             }
         }
 
+        function createFly(phaser) {
+            const fly = phaser.physics.add.sprite(100, 100, 'fly');
+            bugs.add(fly);
+            changeVelocity(fly);
+            fly.body.setCollideWorldBounds(true);
+            fly.anims.play('fly', true);
+        }
+
         function create() {
             this.add.image(400, 300, 'sky');
-
-            bugs = this.physics.add.group({
-                key: 'fly',
-                repeat: 11,
-                setXY: { x: 12, y: 100, stepX: 70 }
-            });
-
+            bugs = this.physics.add.group();
             this.anims.create({
                 key: 'fly',
                 frames: this.anims.generateFrameNumbers('fly', {start: 0, end: 1}),
                 frameRate: 20,
                 repeat: -1,
             });
-
-            bugs.children.iterate(function (child) {
-                changeVelocity(child);
-                child.body.setCollideWorldBounds(true);
-                child.anims.play('fly', true);
-            });
+            createFly(this);
 
             const fontStyle = { fontSize: '32px', fill: '#000' };
             scoreText = this.add.text(16, 16, 'score: 0', fontStyle);
@@ -117,6 +115,7 @@
                 pos.x = pos.x + 8;
                 pos.y = pos.y + 8;
                 bugs.children.iterate(function(bug) {
+                    console.log("bug", bug);
                     if(Phaser.Geom.Intersects.RectangleToRectangle(pos, bug.getBounds())) {
                         swatBug(bug);
                     }
