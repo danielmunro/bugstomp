@@ -65,20 +65,14 @@
             bug.disableBody(true, true);
             score += 10;
             scoreText.setText('Score: ' + score);
-
-            if (bugs.countActive(true) === 0) {
-                bugs.children.iterate(function (child) {
-                    child.enableBody(true, child.x, 0, true, true);
-                    changeVelocity(child);
-                });
-            }
         }
 
         function createFly(phaser) {
             if (bugs.countActive(true) > 9) { 
                 return;
             }
-            const fly = phaser.physics.add.sprite(100, 100, 'fly');
+            const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
+            const fly = phaser.physics.add.sprite(x ? 100 : width - 100, y ? 100 : height - 100, 'fly');
             bugs.add(fly);
             changeVelocity(fly);
             fly.body.setCollideWorldBounds(true);
@@ -94,7 +88,6 @@
                 frameRate: 20,
                 repeat: -1,
             });
-            // createFly(this);
             setInterval(() => createFly(this), 1000);
 
             const fontStyle = { fontSize: '32px', fill: '#000' };
