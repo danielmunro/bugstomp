@@ -75,6 +75,9 @@
         }
 
         function createFly(phaser) {
+            if (bugs.countActive(true) > 9) { 
+                return;
+            }
             const fly = phaser.physics.add.sprite(100, 100, 'fly');
             bugs.add(fly);
             changeVelocity(fly);
@@ -91,7 +94,8 @@
                 frameRate: 20,
                 repeat: -1,
             });
-            createFly(this);
+            // createFly(this);
+            setInterval(() => createFly(this), 1000);
 
             const fontStyle = { fontSize: '32px', fill: '#000' };
             scoreText = this.add.text(16, 16, 'score: 0', fontStyle);
