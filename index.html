@@ -112,7 +112,7 @@
         }
 
         function create() {
-            this.add.image(400, 300, 'sky');
+            this.add.image(width / 2, height / 2, 'sky');
             bugs = this.physics.add.group();
             this.anims.create({
                 key: 'fly',
@@ -122,10 +122,11 @@
             });
             this.anims.create({
                 key: 'fly-attacking',
-                frames: this.anims.generateFrameNumbers('fly-attacking', {start: 0, end: 1}),
+                frames: this.anims.generateFrameNumbers('fly-attacking', {start: 0, end: 3}),
                 frameRate: 20,
                 repeat: -1,
             });
+            createFly(this);
             intervals.push(setInterval(() => createFly(this), 3000));
 
             const fontStyle = { fontSize: '32px', fill: '#000' };
