@@ -41,6 +41,8 @@
         var bugs;
         var lives = 3;
         var gameOver = false;
+        var gameTimer = 0;
+        var timerLabel;
         const intervals = [];
         const timeouts = [];
 
@@ -104,6 +106,11 @@
             }, 4000));
         }
 
+        function updateGameTimer() {
+            gameTimer++;
+            timerLabel.setText(gameTimer);
+        }
+
         function create() {
             this.add.image(400, 300, 'sky');
             bugs = this.physics.add.group();
@@ -124,6 +131,7 @@
             const fontStyle = { fontSize: '32px', fill: '#000' };
             scoreText = this.add.text(16, 16, 'score: 0', fontStyle);
             livesText = this.add.text(16, 48, `lives: ${lives}`, fontStyle);
+            timerLabel = this.add.text((width / 2) - 16, 16, gameTimer, fontStyle);
 
             bombs = this.physics.add.group();
 
@@ -149,6 +157,7 @@
                 });
             });
             this.input.setDefaultCursor('none');
+            intervals.push(setInterval(updateGameTimer, 1000));
         }
 
         function update() {
