@@ -150,9 +150,9 @@
                             lives -= 1;
                             livesText.setText(`lives: ${lives}`);
                         }
-                    }, 2000));
+                    }, 1500));
                 }
-            }, 3000));
+            }, 2500));
         }
 
         function updateGameTimer() {
@@ -201,6 +201,7 @@
             bombs = this.physics.add.group();
 
             swatter = this.physics.add.sprite(400, 300, 'hand');
+            swatter.setDepth(1);
             
             this.anims.create({
                 key: 'swatting',
