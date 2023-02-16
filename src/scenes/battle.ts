@@ -138,11 +138,9 @@ export class BattleScene extends Phaser.Scene {
         this.scoreText.setText(`score: ${this.score}`);
     }
 
-    // private makeBug(x: number, y: number, texture: string): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
-    //     const instance = this.physics.add.sprite(x, y, texture);
-    //     instance.body.setCollideWorldBounds(true);
-    //     return instance;
-    // }
+    private makeBug(x: number, y: number, texture: string): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
+        return this.physics.add.sprite(x, y, texture);
+    }
 
     private createFly() {
         this.flyCreateCounter++;
@@ -154,11 +152,10 @@ export class BattleScene extends Phaser.Scene {
             return;
         }
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
-        const fly = this.physics.add.sprite(x ? 100 : width - 100, y ? 100 : height - 100, 'fly');
-        // const fly = this.makeBug(x ? 100 : width - 100, y ? 100 : height - 100, 'fly');
+        const fly = this.makeBug(x ? 100 : width - 100, y ? 100 : height - 100, 'fly');
         this.flies.add(fly);
-        this.changeVelocity(fly);
         fly.body.setCollideWorldBounds(true);
+        this.changeVelocity(fly);
         fly.anims.play('fly', true);
         this.timeouts.push(setTimeout(() => {
             if (fly.active) {
@@ -189,11 +186,10 @@ export class BattleScene extends Phaser.Scene {
             return;
         }
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
-        const hornet = this.physics.add.sprite(x ? 100 : width - 100, y ? 100 : height - 100, 'hornet');
-        // const hornet = this.makeBug(x ? 100 : width - 100, y ? 100 : height - 100, 'hornet');
+        const hornet = this.makeBug(x ? 100 : width - 100, y ? 100 : height - 100, 'hornet');
         this.hornets.add(hornet);
-        this.changeVelocity(hornet);
         hornet.body.setCollideWorldBounds(true);
+        this.changeVelocity(hornet);
         hornet.anims.play('hornet', true);
         this.timeouts.push(setTimeout(() => {
             if (hornet.active) {
