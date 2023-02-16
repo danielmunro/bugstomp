@@ -1,12 +1,13 @@
 import { width, height } from '../config';
 import { Bug } from '../objects/bug';
+import { Swatter } from '../objects/swatter';
 
 export class BattleScene extends Phaser.Scene {
     private score = 0;
     private scoreText: Phaser.GameObjects.Text;
     private livesText: Phaser.GameObjects.Text;
     private timerLabel: Phaser.GameObjects.Text;
-    private swatter: Phaser.GameObjects.Sprite;
+    private swatter: Swatter;
     private flies: Phaser.GameObjects.Group;
     private hornets: Phaser.GameObjects.Group;
     private lives = 3;
@@ -83,8 +84,7 @@ export class BattleScene extends Phaser.Scene {
         this.livesText = this.add.text(16, 48, `lives: ${this.lives}`, fontStyle);
         this.timerLabel = this.add.text((width / 2) - 16, 16, this.gameTimer.toString(), fontStyle);
 
-        this.swatter = this.physics.add.sprite(400, 300, 'hand');
-        this.swatter.setDepth(1);
+        this.swatter = new Swatter(this);
 
         this.anims.create({
             key: 'swatting',
@@ -92,24 +92,7 @@ export class BattleScene extends Phaser.Scene {
             frameRate: 20,
         });
 
-        this.input.on('pointerup', function () {
-            this.swatter.anims.play('swatting', true);
-            const pos = this.swatter.getBounds();
-            pos.height = 16;
-            pos.width = 16;
-            pos.x = pos.x + 8;
-            pos.y = pos.y + 8;
-            this.flies.children.iterate(function (bug: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
-                if (Phaser.Geom.Intersects.RectangleToRectangle(pos, bug.getBounds())) {
-                    this.swatBug(bug);
-                }
-            }.bind(this));
-            this.hornets.children.iterate(function (bug: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
-                if (Phaser.Geom.Intersects.RectangleToRectangle(pos, bug.getBounds())) {
-                    this.swatBug(bug);
-                }
-            }.bind(this));
-        }.bind(this));
+        this.input.on('pointerup', this.swat.bind(this));
         this.input.setDefaultCursor('none');
         this.intervals.push(setInterval(this.updateGameTimer.bind(this), 1000));
     }
@@ -130,7 +113,26 @@ export class BattleScene extends Phaser.Scene {
         this.swatter.setPosition(pointer.x, pointer.y + 16);
     }
 
-    private swatBug(bug: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    private swat() {
+        this.swatter.playSwatAnim();
+        const pos = this.swatter.getBounds();
+        pos.height = 16;
+        pos.width = 16;
+        pos.x = pos.x + 8;
+        pos.y = pos.y + 8;
+        this.flies.children.iterate((bug: Bug) => {
+            if (Phaser.Geom.Intersects.RectangleToRectangle(pos, bug.getBounds())) {
+                this.swatBug(bug);
+            }
+        });
+        this.hornets.children.iterate((bug: Bug) => {
+            if (Phaser.Geom.Intersects.RectangleToRectangle(pos, bug.getBounds())) {
+                this.swatBug(bug);
+            }
+        });
+    }
+
+    private swatBug(bug: Bug) {
         bug.disableBody(true, true);
         this.score += 10;
         this.scoreText.setText(`score: ${this.score}`);

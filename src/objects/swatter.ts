@@ -6,4 +6,8 @@ export class Swatter extends Phaser.Physics.Arcade.Sprite {
         this.depth = 1;
         scene.add.existing(this);
     }
+
+    playSwatAnim() {
+        this.anims.play('swatting', true);
+    }
 }
