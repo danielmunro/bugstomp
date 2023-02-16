@@ -15,7 +15,6 @@ export class BattleScene extends Phaser.Scene {
     private flyCreateCounter = 0
     private hornetCreateCounter = 0;
     private intervals: Array<NodeJS.Timer> = [];
-    private timeouts: Array<NodeJS.Timer> = [];
 
     constructor() {
         super({ key: 'BattleScene' });
@@ -118,7 +117,12 @@ export class BattleScene extends Phaser.Scene {
     update() {
         if (this.gameOver) {
             this.intervals.forEach((interval) => clearInterval(interval));
-            this.timeouts.forEach((timeout) => clearTimeout(timeout));
+            this.flies.children.iterate((bug) => {
+                bug.setActive(false);
+            });
+            this.hornets.children.iterate((bug) => {
+                bug.setActive(false);
+            });
             return;
         }
         const pointer = this.input.activePointer;
@@ -143,23 +147,7 @@ export class BattleScene extends Phaser.Scene {
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
         const fly = new Bug(this, this.flies, x ? 100 : width - 100, y ? 100 : height - 100, 'fly');
         fly.changeVelocity();
-        this.timeouts.push(setTimeout(() => {
-            if (fly.active) {
-                fly.anims.play('fly-attacking', true);
-                this.timeouts.push(setTimeout(() => {
-                    if (fly.active) {
-                        fly.disableBody(true, true);
-                        if (this.lives < 1) {
-                            this.physics.pause();
-                            this.gameOver = true;
-                            return;
-                        }
-                        this.lives -= 1;
-                        this.livesText.setText(`lives: ${this.lives}`);
-                    }
-                }, 3000));
-            }
-        }, 4000));
+        fly.attack(4000, 3000, this.gotHit.bind(this));
     }
 
     private createHornet() {
@@ -174,23 +162,17 @@ export class BattleScene extends Phaser.Scene {
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
         const hornet = new Bug(this, this.hornets, x ? 100 : width - 100, y ? 100 : height - 100, 'hornet');
         hornet.changeVelocity();
-        this.timeouts.push(setTimeout(() => {
-            if (hornet.active) {
-                hornet.anims.play('hornet-attacking', true);
-                this.timeouts.push(setTimeout(() => {
-                    if (hornet.active) {
-                        hornet.disableBody(true, true);
-                        if (this.lives < 1) {
-                            this.physics.pause();
-                            this.gameOver = true;
-                            return;
-                        }
-                        this.lives -= 1;
-                        this.livesText.setText(`lives: ${this.lives}`);
-                    }
-                }, 1500));
-            }
-        }, 2500));
+        hornet.attack(2500, 1500, this.gotHit.bind(this));
+    }
+
+    private gotHit() {
+        if (this.lives < 1) {
+            this.physics.pause();
+            this.gameOver = true;
+            return;
+        }
+        this.lives -= 1;
+        this.livesText.setText(`lives: ${this.lives}`);
     }
 
     private updateGameTimer() {
