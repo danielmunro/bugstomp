@@ -123,6 +123,7 @@ export class BattleScene extends Phaser.Scene {
             this.hornets.children.iterate((bug) => {
                 bug.setActive(false);
             });
+            this.input.setDefaultCursor('auto');
             return;
         }
         const pointer = this.input.activePointer;
