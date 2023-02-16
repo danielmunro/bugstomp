@@ -74,10 +74,6 @@ export class BattleScene extends Phaser.Scene {
             frameRate: 20,
             repeat: -1,
         });
-        this.flyCreateCounter = 1000;
-        this.createFly();
-        this.intervals.push(setInterval(() => this.createFly(), 100));
-        this.intervals.push(setInterval(() => this.createHornet(), 100));
 
         const fontStyle = { fontSize: '32px', fill: '#000' };
         this.scoreText = this.add.text(16, 16, 'score: 0', fontStyle);
@@ -93,7 +89,14 @@ export class BattleScene extends Phaser.Scene {
         });
 
         this.input.on('pointerup', this.swat.bind(this));
+        
         this.input.setDefaultCursor('none');
+        
+        this.flyCreateCounter = 1000;
+        this.createFly();
+        
+        this.intervals.push(setInterval(() => this.createFly(), 100));
+        this.intervals.push(setInterval(() => this.createHornet(), 100));
         this.intervals.push(setInterval(this.updateGameTimer.bind(this), 1000));
     }
 
@@ -120,12 +123,12 @@ export class BattleScene extends Phaser.Scene {
         pos.width = 16;
         pos.x = pos.x + 8;
         pos.y = pos.y + 8;
-        this.flies.children.iterate((bug: Bug) => {
-            if (Phaser.Geom.Intersects.RectangleToRectangle(pos, bug.getBounds())) {
-                this.swatBug(bug);
-            }
-        });
-        this.hornets.children.iterate((bug: Bug) => {
+        this.checkSwat(pos, this.flies);
+        this.checkSwat(pos, this.hornets);
+    }
+
+    private checkSwat(pos: Phaser.Geom.Rectangle, bugs: Phaser.GameObjects.Group) {
+        bugs.children.iterate((bug: Bug) => {
             if (Phaser.Geom.Intersects.RectangleToRectangle(pos, bug.getBounds())) {
                 this.swatBug(bug);
             }
