@@ -1,4 +1,5 @@
 import { width, height } from '../config';
+import { Bug } from '../objects/bug';
 
 export class BattleScene extends Phaser.Scene {
     private score = 0;
@@ -124,10 +125,9 @@ export class BattleScene extends Phaser.Scene {
         this.swatter.setPosition(pointer.x, pointer.y + 16);
     }
 
-    private changeVelocity(bug: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody) {
+    private changeVelocity(bug: Bug) {
         if (bug.active) {
             bug.setVelocity(Phaser.Math.Between(-150, 150), Phaser.Math.Between(-150, 150));
-            bug.body.setBounce(Phaser.Math.FloatBetween(0.5, 1));
             this.timeouts.push(setTimeout(() => this.changeVelocity(bug), Phaser.Math.Between(1000, 4000)));
         }
     }
@@ -136,10 +136,6 @@ export class BattleScene extends Phaser.Scene {
         bug.disableBody(true, true);
         this.score += 10;
         this.scoreText.setText(`score: ${this.score}`);
-    }
-
-    private makeBug(x: number, y: number, texture: string): Phaser.Types.Physics.Arcade.SpriteWithDynamicBody {
-        return this.physics.add.sprite(x, y, texture);
     }
 
     private createFly() {
@@ -152,9 +148,10 @@ export class BattleScene extends Phaser.Scene {
             return;
         }
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
-        const fly = this.makeBug(x ? 100 : width - 100, y ? 100 : height - 100, 'fly');
-        this.flies.add(fly);
-        fly.body.setCollideWorldBounds(true);
+        // const fly = this.makeBug(x ? 100 : width - 100, y ? 100 : height - 100, 'fly');
+        const fly = new Bug(this, this.flies, x ? 100 : width - 100, y ? 100 : height - 100, 'fly');
+        // this.flies.add(fly);
+        // fly.body.setCollideWorldBounds(true);
         this.changeVelocity(fly);
         fly.anims.play('fly', true);
         this.timeouts.push(setTimeout(() => {
@@ -186,9 +183,10 @@ export class BattleScene extends Phaser.Scene {
             return;
         }
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
-        const hornet = this.makeBug(x ? 100 : width - 100, y ? 100 : height - 100, 'hornet');
-        this.hornets.add(hornet);
-        hornet.body.setCollideWorldBounds(true);
+        // const hornet = this.makeBug(x ? 100 : width - 100, y ? 100 : height - 100, 'hornet');
+        const hornet = new Bug(this, this.hornets, x ? 100 : width - 100, y ? 100 : height - 100, 'hornet');
+        // this.hornets.add(hornet);
+        // hornet.body.setCollideWorldBounds(true);
         this.changeVelocity(hornet);
         hornet.anims.play('hornet', true);
         this.timeouts.push(setTimeout(() => {
