@@ -1,8 +1,10 @@
 export class Bug extends Phaser.Physics.Arcade.Sprite {
     private textureKey: string;
+    public readonly score: number;
 
-    constructor(scene: Phaser.Scene, group: Phaser.GameObjects.Group, x: number, y: number, texture: string) {
+    constructor(scene: Phaser.Scene, group: Phaser.GameObjects.Group, x: number, y: number, texture: string, score: number) {
         super(scene, x, y, texture);
+        this.score = score;
         this.textureKey = texture;
         group.add(this);
         scene.add.existing(this);

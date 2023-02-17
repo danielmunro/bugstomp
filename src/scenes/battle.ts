@@ -1,5 +1,7 @@
 import { width, height } from '../config';
 import { Bug } from '../objects/bug';
+import { Fly } from '../objects/fly';
+import { Hornet } from '../objects/hornet';
 import { Swatter } from '../objects/swatter';
 
 export class BattleScene extends Phaser.Scene {
@@ -137,7 +139,7 @@ export class BattleScene extends Phaser.Scene {
 
     private swatBug(bug: Bug) {
         bug.disableBody(true, true);
-        this.score += 10;
+        this.score += bug.score;
         this.scoreText.setText(`score: ${this.score}`);
     }
 
@@ -151,7 +153,7 @@ export class BattleScene extends Phaser.Scene {
             return;
         }
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
-        const fly = new Bug(this, this.flies, x ? 100 : width - 100, y ? 100 : height - 100, 'fly');
+        const fly = new Fly(this, this.flies, x ? 100 : width - 100, y ? 100 : height - 100);
         fly.changeVelocity();
         fly.attack(4000, 3000, this.gotHit.bind(this));
     }
@@ -166,7 +168,7 @@ export class BattleScene extends Phaser.Scene {
             return;
         }
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
-        const hornet = new Bug(this, this.hornets, x ? 100 : width - 100, y ? 100 : height - 100, 'hornet');
+        const hornet = new Hornet(this, this.hornets, x ? 100 : width - 100, y ? 100 : height - 100);
         hornet.changeVelocity();
         hornet.attack(2500, 1500, this.gotHit.bind(this));
     }
