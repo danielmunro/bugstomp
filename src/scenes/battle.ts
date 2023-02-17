@@ -99,7 +99,8 @@ export class BattleScene extends Phaser.Scene {
         
         this.intervals.push(setInterval(() => this.createFly(), 100));
         this.intervals.push(setInterval(() => this.createHornet(), 100));
-        this.intervals.push(setInterval(this.updateGameTimer.bind(this), 1000));
+        this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
+        this.intervals.push(setInterval(() => this.sendWave(), 8000));
     }
 
     update() {
@@ -116,6 +117,50 @@ export class BattleScene extends Phaser.Scene {
         }
         const pointer = this.input.activePointer;
         this.swatter.setPosition(pointer.x, pointer.y + 16);
+    }
+
+    gotHit() {
+        if (this.lives < 1) {
+            this.physics.pause();
+            this.gameOver = true;
+            return;
+        }
+        this.lives -= 1;
+        this.livesText.setText(`lives: ${this.lives}`);
+    }
+
+    private sendWave() {
+        const side = Phaser.Math.Between(0, 4);
+        console.log("Send wave ", side);
+        const x = width / 4;
+        const y = height / 4;
+        const bugs: Array<Bug> = [];
+        const velocity = side < 2 ? -150 : 150;
+        if (side === 0) {
+            bugs.push(new Fly(this, this.flies, x, y * 3));
+            bugs.push(new Fly(this, this.flies, x * 2, y * 3));
+            bugs.push(new Fly(this, this.flies, x * 3, y * 3));
+        } else if (side === 1) {
+            bugs.push(new Fly(this, this.flies, x * 3, y));
+            bugs.push(new Fly(this, this.flies, x * 3, y * 2));
+            bugs.push(new Fly(this, this.flies, x * 3, y * 3));
+        } else if (side === 2) {
+            bugs.push(new Fly(this, this.flies, x, y));
+            bugs.push(new Fly(this, this.flies, x * 2, y));
+            bugs.push(new Fly(this, this.flies, x * 3, y));
+        } else if (side === 3) {
+            bugs.push(new Fly(this, this.flies, x, y));
+            bugs.push(new Fly(this, this.flies, x, y * 2));
+            bugs.push(new Fly(this, this.flies, x, y * 3));
+        }
+        bugs.forEach((bug) => {
+            if (side % 2 == 0) {
+                bug.setVelocityY(velocity);
+            } else {
+                bug.setVelocityX(velocity);
+            }
+            setTimeout(() => bug.changeVelocity(), Phaser.Math.Between(3000, 5000));
+        });
     }
 
     private swat() {
@@ -155,7 +200,6 @@ export class BattleScene extends Phaser.Scene {
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
         const fly = new Fly(this, this.flies, x ? 100 : width - 100, y ? 100 : height - 100);
         fly.changeVelocity();
-        fly.attack(4000, 3000, this.gotHit.bind(this));
     }
 
     private createHornet() {
@@ -170,17 +214,6 @@ export class BattleScene extends Phaser.Scene {
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
         const hornet = new Hornet(this, this.hornets, x ? 100 : width - 100, y ? 100 : height - 100);
         hornet.changeVelocity();
-        hornet.attack(2500, 1500, this.gotHit.bind(this));
-    }
-
-    private gotHit() {
-        if (this.lives < 1) {
-            this.physics.pause();
-            this.gameOver = true;
-            return;
-        }
-        this.lives -= 1;
-        this.livesText.setText(`lives: ${this.lives}`);
     }
 
     private updateGameTimer() {
