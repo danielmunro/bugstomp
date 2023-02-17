@@ -131,7 +131,6 @@ export class BattleScene extends Phaser.Scene {
 
     private sendWave() {
         const side = Phaser.Math.Between(0, 4);
-        console.log("Send wave ", side);
         const x = width / 4;
         const y = height / 4;
         const bugs: Array<Bug> = [];
