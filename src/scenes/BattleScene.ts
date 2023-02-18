@@ -3,6 +3,7 @@ import Bug from '../objects/Bug';
 import Fly from '../objects/Fly';
 import Hornet from '../objects/Hornet';
 import Swatter from '../objects/Swatter';
+import Life from "../objects/Life"
 
 export default class BattleScene extends Phaser.Scene {
     private score = 0;
@@ -12,6 +13,7 @@ export default class BattleScene extends Phaser.Scene {
     private swatter: Swatter;
     private flies: Phaser.GameObjects.Group;
     private hornets: Phaser.GameObjects.Group;
+    private lifePowerups: Phaser.GameObjects.Group;
     private lives = 3;
     private gameOver = false;
     private gameTimer = 0;
@@ -26,6 +28,7 @@ export default class BattleScene extends Phaser.Scene {
     preload(): void {
         this.load.image('sky', 'assets/sky.png');
         this.load.image('star', 'assets/star.png');
+        this.load.image('life', 'assets/level-up.png');
         this.load.spritesheet('fly',
             'assets/fly.png',
             { frameWidth: 32, frameHeight: 32 }
@@ -52,6 +55,7 @@ export default class BattleScene extends Phaser.Scene {
         this.add.image(width / 2, height / 2, 'sky');
         this.flies = this.physics.add.group();
         this.hornets = this.physics.add.group();
+        this.lifePowerups = this.physics.add.group();
         this.anims.create({
             key: 'fly',
             frames: this.anims.generateFrameNumbers('fly', { start: 0, end: 1 }),
@@ -101,6 +105,7 @@ export default class BattleScene extends Phaser.Scene {
         this.intervals.push(setInterval(() => this.createHornet(), 100));
         this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
         this.intervals.push(setInterval(() => this.sendWave(), 8000));
+        this.intervals.push(setInterval(() => this.create1Up(), 18000));
     }
 
     update() {
@@ -129,6 +134,25 @@ export default class BattleScene extends Phaser.Scene {
         this.livesText.setText(`lives: ${this.lives}`);
     }
 
+    private create1Up() {
+        const y = height + 16;
+        const x = Phaser.Math.Between(100, width - 100);
+        const life = new Life(this, x, y, 'life');
+        this.add.existing(life);
+        this.lifePowerups.add(life);
+        life.setVelocityY(-100);
+        const moveInt = setInterval(() => {
+            if (life.y < 0) {
+                life.disableBody(true, true);
+            }
+            if (life.active) {
+                life.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);
+            } else {
+                clearTimeout(moveInt);
+            }
+        }, 800);
+    }
+
     private sendWave() {
         if (this.gameTimer < 20) {
             this.sendFlyWave();
@@ -141,6 +165,13 @@ export default class BattleScene extends Phaser.Scene {
         this.swatter.playSwatAnim();
         this.checkSwat(this.flies);
         this.checkSwat(this.hornets);
+        this.lifePowerups.children.iterate((life: Life) => {
+            if (this.swatter.hoversOver(life)) {
+                life.disableBody(true, true);
+                this.lives++;
+                this.livesText.setText(`lives: ${this.lives}`);
+            }
+        });
     }
 
     private checkSwat(bugs: Phaser.GameObjects.Group) {
