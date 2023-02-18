@@ -1,6 +1,6 @@
-import { BattleScene } from "../scenes/battle";
+import BattleScene from "../scenes/BattleScene";
 
-export class Bug extends Phaser.Physics.Arcade.Sprite {
+export default class Bug extends Phaser.Physics.Arcade.Sprite {
     private textureKey: string;
     public readonly score: number;
 

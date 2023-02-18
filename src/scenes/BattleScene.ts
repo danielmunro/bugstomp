@@ -1,10 +1,10 @@
 import { width, height } from '../config';
-import { Bug } from '../objects/bug';
-import { Fly } from '../objects/fly';
-import { Hornet } from '../objects/hornet';
-import { Swatter } from '../objects/swatter';
+import Bug from '../objects/bug';
+import Fly from '../objects/fly';
+import Hornet from '../objects/hornet';
+import Swatter from '../objects/swatter';
 
-export class BattleScene extends Phaser.Scene {
+export default class BattleScene extends Phaser.Scene {
     private score = 0;
     private scoreText: Phaser.GameObjects.Text;
     private livesText: Phaser.GameObjects.Text;

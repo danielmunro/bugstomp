@@ -1,4 +1,4 @@
-import { BattleScene } from './scenes/battle';
+import BattleScene from './scenes/BattleScene';
 
 export const width = 800;
 export const height = 600;
