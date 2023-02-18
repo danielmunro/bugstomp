@@ -130,36 +130,11 @@ export class BattleScene extends Phaser.Scene {
     }
 
     private sendWave() {
-        const side = Phaser.Math.Between(0, 4);
-        const x = width / 4;
-        const y = height / 4;
-        const bugs: Array<Bug> = [];
-        const velocity = side < 2 ? -150 : 150;
-        if (side === 0) {
-            bugs.push(new Fly(this, this.flies, x, y * 3));
-            bugs.push(new Fly(this, this.flies, x * 2, y * 3));
-            bugs.push(new Fly(this, this.flies, x * 3, y * 3));
-        } else if (side === 1) {
-            bugs.push(new Fly(this, this.flies, x * 3, y));
-            bugs.push(new Fly(this, this.flies, x * 3, y * 2));
-            bugs.push(new Fly(this, this.flies, x * 3, y * 3));
-        } else if (side === 2) {
-            bugs.push(new Fly(this, this.flies, x, y));
-            bugs.push(new Fly(this, this.flies, x * 2, y));
-            bugs.push(new Fly(this, this.flies, x * 3, y));
-        } else if (side === 3) {
-            bugs.push(new Fly(this, this.flies, x, y));
-            bugs.push(new Fly(this, this.flies, x, y * 2));
-            bugs.push(new Fly(this, this.flies, x, y * 3));
+        if (this.gameTimer < 20) {
+            this.sendFlyWave();
+        } else {
+            this.sendHornetWave();
         }
-        bugs.forEach((bug) => {
-            if (side % 2 == 0) {
-                bug.setVelocityY(velocity);
-            } else {
-                bug.setVelocityX(velocity);
-            }
-            setTimeout(() => bug.changeVelocity(), Phaser.Math.Between(3000, 5000));
-        });
     }
 
     private swat() {
@@ -218,5 +193,73 @@ export class BattleScene extends Phaser.Scene {
     private updateGameTimer() {
         this.gameTimer++;
         this.timerLabel.setText(this.gameTimer.toString());
+    }
+
+    private sendFlyWave() {
+        const side = Phaser.Math.Between(0, 4);
+        const x = width / 4;
+        const y = height / 4;
+        const velocity = side < 2 ? -150 : 150;
+        const coords: Array<Array<number>> = [];
+        if (side === 0) {
+            coords.push([x, y * 3]);
+            coords.push([x * 2, y * 3]);
+            coords.push([x * 3, y * 3]);
+        } else if (side === 1) {
+            coords.push([x * 3, y]);
+            coords.push([x * 3, y * 2]);
+            coords.push([x * 3, y * 3]);
+        } else if (side === 2) {
+            coords.push([x, y]);
+            coords.push([x * 2, y]);
+            coords.push([x * 3, y]);
+        } else if (side === 3) {
+            coords.push([x, y]);
+            coords.push([x, y * 2]);
+            coords.push([x, y * 3]);
+        }
+        coords.forEach((coord) => {
+            const bug = new Fly(this, this.flies, coord[0], coord[1]);
+            if (side % 2 == 0) {
+                bug.setVelocityY(velocity);
+            } else {
+                bug.setVelocityX(velocity);
+            }
+            setTimeout(() => bug.changeVelocity(), Phaser.Math.Between(3000, 5000));
+        });
+    }
+
+    private sendHornetWave() {
+        const side = Phaser.Math.Between(0, 4);
+        const x = width / 4;
+        const y = height / 4;
+        const velocity = side < 2 ? -150 : 150;
+        const coords: Array<Array<number>> = [];
+        if (side === 0) {
+            coords.push([x, y * 3]);
+            coords.push([x * 2, y * 3]);
+            coords.push([x * 3, y * 3]);
+        } else if (side === 1) {
+            coords.push([x * 3, y]);
+            coords.push([x * 3, y * 2]);
+            coords.push([x * 3, y * 3]);
+        } else if (side === 2) {
+            coords.push([x, y]);
+            coords.push([x * 2, y]);
+            coords.push([x * 3, y]);
+        } else if (side === 3) {
+            coords.push([x, y]);
+            coords.push([x, y * 2]);
+            coords.push([x, y * 3]);
+        }
+        coords.forEach((coord) => {
+            const bug = new Hornet(this, this.hornets, coord[0], coord[1]);
+            if (side % 2 == 0) {
+                bug.setVelocityY(velocity);
+            } else {
+                bug.setVelocityX(velocity);
+            }
+            setTimeout(() => bug.changeVelocity(), Phaser.Math.Between(2000, 4000));
+        });
     }
 }
