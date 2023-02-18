@@ -1,8 +1,8 @@
 import { width, height } from '../config';
-import Bug from '../objects/bug';
-import Fly from '../objects/fly';
-import Hornet from '../objects/hornet';
-import Swatter from '../objects/swatter';
+import Bug from '../objects/Bug';
+import Fly from '../objects/Fly';
+import Hornet from '../objects/Hornet';
+import Swatter from '../objects/Swatter';
 
 export default class BattleScene extends Phaser.Scene {
     private score = 0;
@@ -91,12 +91,12 @@ export default class BattleScene extends Phaser.Scene {
         });
 
         this.input.on('pointerup', this.swat.bind(this));
-        
+
         this.input.setDefaultCursor('none');
-        
+
         this.flyCreateCounter = 1000;
         this.createFly();
-        
+
         this.intervals.push(setInterval(() => this.createFly(), 100));
         this.intervals.push(setInterval(() => this.createHornet(), 100));
         this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));

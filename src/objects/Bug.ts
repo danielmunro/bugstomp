@@ -1,7 +1,7 @@
 import BattleScene from "../scenes/BattleScene";
 
 export default class Bug extends Phaser.Physics.Arcade.Sprite {
-    private textureKey: string;
+    private readonly textureKey: string;
     public readonly score: number;
 
     constructor(scene: BattleScene, group: Phaser.GameObjects.Group, x: number, y: number, texture: string, score: number, moveTimeout: number, attackTimeout: number) {
