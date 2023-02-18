@@ -10,4 +10,13 @@ export default class Swatter extends Phaser.Physics.Arcade.Sprite {
     playSwatAnim() {
         this.anims.play('swatting', true);
     }
+
+    hoversOver(button: Phaser.GameObjects.Image) {
+        const pos = this.getBounds();
+        pos.height = 16;
+        pos.width = 16;
+        pos.x = pos.x + 8;
+        pos.y = pos.y + 8;
+        return Phaser.Geom.Intersects.RectangleToRectangle(pos, button.getBounds());
+    }
 }

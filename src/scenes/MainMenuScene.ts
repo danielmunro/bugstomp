@@ -89,19 +89,10 @@ export default class MainMenuScene extends Phaser.Scene {
   private swat() {
     this.swatter.playSwatAnim();
     this.buttons.forEach((button) => {
-      if (this.hoversOver(button)) {
+      if (this.swatter.hoversOver(button)) {
         button.emit('selected');
       }
     });
-  }
-
-  private hoversOver(button: Phaser.GameObjects.Image) {
-    const pos = this.swatter.getBounds();
-    pos.height = 16;
-    pos.width = 16;
-    pos.x = pos.x + 8;
-    pos.y = pos.y + 8;
-    return Phaser.Geom.Intersects.RectangleToRectangle(pos, button.getBounds());
   }
 
   update() {
@@ -109,7 +100,7 @@ export default class MainMenuScene extends Phaser.Scene {
     this.swatter.setPosition(pointer.x, pointer.y + 16);
     this.buttons.forEach((button) => {
       button.setTint(0xffffff);
-      if (this.hoversOver(button)) {
+      if (this.swatter.hoversOver(button)) {
         button.setTint(0x66ff7f);
       }
     });

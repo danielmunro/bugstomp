@@ -139,18 +139,13 @@ export default class BattleScene extends Phaser.Scene {
 
     private swat() {
         this.swatter.playSwatAnim();
-        const pos = this.swatter.getBounds();
-        pos.height = 16;
-        pos.width = 16;
-        pos.x = pos.x + 8;
-        pos.y = pos.y + 8;
-        this.checkSwat(pos, this.flies);
-        this.checkSwat(pos, this.hornets);
+        this.checkSwat(this.flies);
+        this.checkSwat(this.hornets);
     }
 
-    private checkSwat(pos: Phaser.Geom.Rectangle, bugs: Phaser.GameObjects.Group) {
+    private checkSwat(bugs: Phaser.GameObjects.Group) {
         bugs.children.iterate((bug: Bug) => {
-            if (Phaser.Geom.Intersects.RectangleToRectangle(pos, bug.getBounds())) {
+            if (this.swatter.hoversOver(bug)) {
                 this.swatBug(bug);
             }
         });
