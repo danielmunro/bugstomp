@@ -1,4 +1,5 @@
 import BattleScene from './scenes/BattleScene';
+import MainMenuScene from "./scenes/MainMenuScene"
 
 export const width = 800;
 export const height = 600;
@@ -10,8 +11,11 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: false
-        }
+            debug: false,
+        },
     },
-    scene: [BattleScene],
-};;
+    scene: [
+        MainMenuScene,
+        BattleScene,
+    ],
+};
