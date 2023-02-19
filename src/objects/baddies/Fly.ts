@@ -9,8 +9,13 @@ export default class Fly extends Bug {
 
   changeVelocity(swatter: Swatter) {
     if (this.active) {
-      this.setVelocity(Phaser.Math.Between(-150, 150), Phaser.Math.Between(-150, 150));
-      setTimeout(() => this.changeVelocity(swatter), Phaser.Math.Between(1000, 4000));
+      const towardRandomizer = Phaser.Math.Between(0, 2);
+      const speed = Phaser.Math.Between(40, 100);
+      this.setVelocity(
+        this.x > swatter.x && towardRandomizer < 2 ? -speed : speed,
+        this.y > swatter.y && towardRandomizer < 2 ? -speed : speed,
+      );
+      setTimeout(() => this.changeVelocity(swatter), 500);
     }
   }
 }
