@@ -137,12 +137,7 @@ export default class BattleScene extends Phaser.Scene {
     }
 
     powerUpSwatter() {
-        this.swatter.setScale(2, 2);
-        this.swatter.poweredUp = true;
-        setTimeout(() => {
-            this.swatter.setScale(1, 1);
-            this.swatter.poweredUp = false;
-        }, 10000);
+        this.swatter.doPowerUp();
     }
 
     addScore(score: number) {
