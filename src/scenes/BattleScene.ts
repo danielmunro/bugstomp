@@ -152,7 +152,7 @@ export default class BattleScene extends Phaser.Scene {
         this.lifeAffect = this.add.sprite(this.swatter.x, this.swatter.y, 'life-affect');
         this.lifeAffect.setDepth(2);
         if (this.swatter.poweredUp) {
-            this.lifeAffect.setScale(2, 2);
+            this.lifeAffect.setScale(1.5, 1.5);
         }
         this.lifeAffect.anims.play('life-affect');
         setTimeout(() => {

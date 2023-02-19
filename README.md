@@ -45,7 +45,7 @@ yarn dev
   * main game loop music
   * 0 lives remaining panic music
   * sound effects
-    * swatting
+    * swatting - normal & super size
     * fly death
     * hornet death
     * gain life

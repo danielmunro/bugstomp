@@ -26,7 +26,7 @@ export default class Swatter extends Phaser.Physics.Arcade.Sprite {
     }
 
     superSize() {
-        let scale = 2;
+        let scale = 1.5;
         this.setScale(scale, scale);
         this.poweredUp = true;
         if (this.powerUpTimeout) {
@@ -35,7 +35,7 @@ export default class Swatter extends Phaser.Physics.Arcade.Sprite {
         this.powerUpTimeout = setTimeout(() => {
             let amount = 0;
             const wearOutInt = setInterval(() => {
-                scale = scale === 2 ? 1 : 2;
+                scale = scale === 1.5 ? 1 : 1.5;
                 this.setScale(scale);
                 if (amount > 3) {
                     this.setScale(1, 1);

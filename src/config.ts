@@ -16,6 +16,7 @@ export const GameConfig: Phaser.Types.Core.GameConfig = {
       debug: false,
     },
   },
+  scale: { mode: Phaser.Scale.ScaleModes.FIT },
   scene: [
     MainMenuScene,
     CreditsScene,
