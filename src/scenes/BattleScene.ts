@@ -229,7 +229,7 @@ export default class BattleScene extends Phaser.Scene {
         this.flyCreateCounter = 0;
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
         const fly = new Fly(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
-        fly.changeVelocity();
+        fly.changeVelocity(this.swatter);
     }
 
     private createHornet() {
@@ -240,7 +240,7 @@ export default class BattleScene extends Phaser.Scene {
         this.hornetCreateCounter = 0;
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
         const hornet = new Hornet(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
-        hornet.changeVelocity();
+        hornet.changeVelocity(this.swatter);
     }
 
     private updateGameTimer() {
@@ -259,7 +259,7 @@ export default class BattleScene extends Phaser.Scene {
             } else {
                 bug.setVelocityX(velocity);
             }
-            setTimeout(() => bug.changeVelocity(), Phaser.Math.Between(3000, 5000));
+            setTimeout(() => bug.changeVelocity(this.swatter), Phaser.Math.Between(3000, 5000));
         });
     }
 
@@ -274,7 +274,7 @@ export default class BattleScene extends Phaser.Scene {
             } else {
                 bug.setVelocityX(velocity);
             }
-            setTimeout(() => bug.changeVelocity(), Phaser.Math.Between(2000, 4000));
+            setTimeout(() => bug.changeVelocity(this.swatter), Phaser.Math.Between(2000, 4000));
         });
     }
 
