@@ -20,7 +20,8 @@ export default class BattleScene extends Phaser.Scene {
     private flyCreateCounter = 0
     private hornetCreateCounter = 0;
     private intervals: Array<NodeJS.Timer> = [];
-    private invincible = true;
+    private invincible = false;
+    private lifeAffect: Phaser.GameObjects.Sprite;
 
     constructor() {
         super('battle');
@@ -51,6 +52,10 @@ export default class BattleScene extends Phaser.Scene {
             'assets/swatter.png',
             { frameWidth: 32, frameHeight: 48 }
         );
+        this.load.spritesheet('life-affect',
+          'assets/life-affect.png',
+          { frameWidth: 32, frameHeight: 48 }
+        );
     }
 
     create(): void {
@@ -77,6 +82,12 @@ export default class BattleScene extends Phaser.Scene {
         this.anims.create({
             key: 'hornet-attacking',
             frames: this.anims.generateFrameNumbers('hornet-attacking', { start: 0, end: 3 }),
+            frameRate: 20,
+            repeat: -1,
+        });
+        this.anims.create({
+            key: 'life-affect',
+            frames: this.anims.generateFrameNumbers('life-affect', { start: 0, end: 1 }),
             frameRate: 20,
             repeat: -1,
         });
@@ -120,6 +131,9 @@ export default class BattleScene extends Phaser.Scene {
         }
         const pointer = this.input.activePointer;
         this.swatter.setPosition(pointer.x, pointer.y + 16);
+        if (this.lifeAffect) {
+            this.lifeAffect.setPosition(pointer.x, pointer.y + 16);
+        }
     }
 
     gotHit() {
@@ -135,6 +149,12 @@ export default class BattleScene extends Phaser.Scene {
     incrementLife() {
         this.lives++;
         this.livesText.setText(`lives: ${this.lives}`);
+        this.lifeAffect = this.add.sprite(this.swatter.x, this.swatter.y, 'life-affect');
+        this.lifeAffect.setDepth(2);
+        this.lifeAffect.anims.play('life-affect');
+        setTimeout(() => {
+            this.lifeAffect.destroy(true);
+        }, 1000);
     }
 
     superSizeSwatter() {
