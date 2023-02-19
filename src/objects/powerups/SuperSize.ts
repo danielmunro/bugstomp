@@ -7,7 +7,7 @@ export default class SuperSize extends Phaser.Physics.Arcade.Sprite implements S
     scene.add.existing(this);
     group.add(this);
     this.on('supersize', () => {
-      scene.powerUpSwatter();
+      scene.superSizeSwatter();
     });
   }
 

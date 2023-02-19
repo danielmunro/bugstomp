@@ -25,15 +25,26 @@ export default class Swatter extends Phaser.Physics.Arcade.Sprite {
         return Phaser.Geom.Intersects.RectangleToRectangle(pos, sprite.getBounds());
     }
 
-    doPowerUp() {
-        this.setScale(2, 2);
+    superSize() {
+        let scale = 2;
+        this.setScale(scale, scale);
         this.poweredUp = true;
         if (this.powerUpTimeout) {
             clearTimeout(this.powerUpTimeout);
         }
         this.powerUpTimeout = setTimeout(() => {
-            this.setScale(1, 1);
-            this.poweredUp = false;
+            let amount = 0;
+            const wearOutInt = setInterval(() => {
+                scale = scale === 2 ? 1 : 2;
+                this.setScale(scale);
+                if (amount > 3) {
+                    this.setScale(1, 1);
+                    this.poweredUp = false;
+                    clearInterval(wearOutInt);
+                }
+                amount++;
+            }, 500);
+
         }, 10000);
     }
 }

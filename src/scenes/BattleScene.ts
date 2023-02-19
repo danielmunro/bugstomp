@@ -20,6 +20,7 @@ export default class BattleScene extends Phaser.Scene {
     private flyCreateCounter = 0
     private hornetCreateCounter = 0;
     private intervals: Array<NodeJS.Timer> = [];
+    private invincible = true;
 
     constructor() {
         super('battle');
@@ -122,7 +123,7 @@ export default class BattleScene extends Phaser.Scene {
     }
 
     gotHit() {
-        if (this.lives < 1) {
+        if (this.lives < 1 && !this.invincible) {
             this.physics.pause();
             this.gameOver = true;
             return;
@@ -136,8 +137,8 @@ export default class BattleScene extends Phaser.Scene {
         this.livesText.setText(`lives: ${this.lives}`);
     }
 
-    powerUpSwatter() {
-        this.swatter.doPowerUp();
+    superSizeSwatter() {
+        this.swatter.superSize();
     }
 
     addScore(score: number) {
