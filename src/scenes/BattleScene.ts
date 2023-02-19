@@ -13,10 +13,7 @@ export default class BattleScene extends Phaser.Scene {
     private livesText: Phaser.GameObjects.Text;
     private timerLabel: Phaser.GameObjects.Text;
     private swatter: Swatter;
-    private flies: Phaser.GameObjects.Group;
-    private hornets: Phaser.GameObjects.Group;
-    private lifePowerups: Phaser.GameObjects.Group;
-    private powerups: Phaser.GameObjects.Group;
+    private swattables: Phaser.GameObjects.Group;
     private lives = 3;
     private gameOver = false;
     private gameTimer = 0;
@@ -32,7 +29,7 @@ export default class BattleScene extends Phaser.Scene {
         this.load.image('sky', 'assets/sky.png');
         this.load.image('star', 'assets/star.png');
         this.load.image('life', 'assets/level-up.png');
-        this.load.image('powerup', 'assets/level-up.png');
+        this.load.image('powerup', 'assets/power-up.png');
         this.load.spritesheet('fly',
             'assets/fly.png',
             { frameWidth: 32, frameHeight: 32 }
@@ -57,10 +54,7 @@ export default class BattleScene extends Phaser.Scene {
 
     create(): void {
         this.add.image(width / 2, height / 2, 'sky');
-        this.flies = this.physics.add.group();
-        this.hornets = this.physics.add.group();
-        this.lifePowerups = this.physics.add.group();
-        this.powerups = this.physics.add.group();
+        this.swattables = this.physics.add.group();
         this.anims.create({
             key: 'fly',
             frames: this.anims.generateFrameNumbers('fly', { start: 0, end: 1 }),
@@ -117,10 +111,7 @@ export default class BattleScene extends Phaser.Scene {
     update() {
         if (this.gameOver) {
             this.intervals.forEach((interval) => clearInterval(interval));
-            this.flies.children.iterate((bug) => {
-                bug.setActive(false);
-            });
-            this.hornets.children.iterate((bug) => {
+            this.swattables.children.iterate((bug) => {
                 bug.setActive(false);
             });
             this.input.setDefaultCursor('auto');
@@ -162,7 +153,7 @@ export default class BattleScene extends Phaser.Scene {
     private createPowerUp() {
         const y = height + 16;
         const x = Phaser.Math.Between(100, width - 100);
-        const powerup = new Powerup(this, this.powerups, x, y, 'powerup');
+        const powerup = new Powerup(this, this.swattables, x, y, 'powerup');
         powerup.setVelocityY(-100);
         const moveInt = setInterval(() => {
             if (powerup.y < 0) {
@@ -179,7 +170,7 @@ export default class BattleScene extends Phaser.Scene {
     private create1Up() {
         const y = height + 16;
         const x = Phaser.Math.Between(100, width - 100);
-        const life = new Life(this, this.lifePowerups, x, y, 'life');
+        const life = new Life(this, this.swattables, x, y, 'life');
         life.setVelocityY(-100);
         const moveInt = setInterval(() => {
             if (life.y < 0) {
@@ -203,25 +194,8 @@ export default class BattleScene extends Phaser.Scene {
 
     private swat() {
         this.swatter.playSwatAnim();
-        this.checkSwat(this.flies);
-        this.checkSwat(this.hornets);
-        this.lifePowerups.children.iterate((life: any) => {
-            const swattable = life as SwattableObject;
-            if (this.swatter.hoversOver(swattable)) {
-                swattable.swat();
-            }
-        });
-        this.powerups.children.iterate((powerup: any) => {
-            const swattable = powerup as SwattableObject;
-            if (this.swatter.hoversOver(swattable)) {
-                swattable.swat();
-            }
-        });
-    }
-
-    private checkSwat(bugs: Phaser.GameObjects.Group) {
-        bugs.children.iterate((bug: any) => {
-            const swattable = bug as SwattableObject;
+        this.swattables.children.iterate((swat: any) => {
+            const swattable = swat as SwattableObject;
             if (this.swatter.hoversOver(swattable)) {
                 swattable.swat();
             }
@@ -234,11 +208,8 @@ export default class BattleScene extends Phaser.Scene {
             return;
         }
         this.flyCreateCounter = 0;
-        if (this.flies.countActive(true) > 5) {
-            return;
-        }
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
-        const fly = new Fly(this, this.flies, x ? 100 : width - 100, y ? 100 : height - 100);
+        const fly = new Fly(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
         fly.changeVelocity();
     }
 
@@ -248,11 +219,8 @@ export default class BattleScene extends Phaser.Scene {
             return;
         }
         this.hornetCreateCounter = 0;
-        if (this.hornets.countActive(true) > 1 || this.gameTimer > 27 && this.hornets.countActive(true) > 2) {
-            return;
-        }
         const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
-        const hornet = new Hornet(this, this.hornets, x ? 100 : width - 100, y ? 100 : height - 100);
+        const hornet = new Hornet(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
         hornet.changeVelocity();
     }
 
@@ -266,7 +234,7 @@ export default class BattleScene extends Phaser.Scene {
         const velocity = side < 2 ? -150 : 150;
         const coords = BattleScene.getCoords(side);
         coords.forEach((coord) => {
-            const bug = new Fly(this, this.flies, coord[0], coord[1]);
+            const bug = new Fly(this, this.swattables, coord[0], coord[1]);
             if (side % 2 == 0) {
                 bug.setVelocityY(velocity);
             } else {
@@ -281,7 +249,7 @@ export default class BattleScene extends Phaser.Scene {
         const velocity = side < 2 ? -150 : 150;
         const coords = BattleScene.getCoords(side);
         coords.forEach((coord) => {
-            const bug = new Hornet(this, this.hornets, coord[0], coord[1]);
+            const bug = new Hornet(this, this.swattables, coord[0], coord[1]);
             if (side % 2 == 0) {
                 bug.setVelocityY(velocity);
             } else {
