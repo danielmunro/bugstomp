@@ -5,6 +5,7 @@ import Hornet from '../objects/Hornet';
 import Swatter from '../objects/Swatter';
 import Life from "../objects/Life"
 import Powerup from "../objects/Powerup"
+import SwattableObject from "../interfaces/SwattableObject"
 
 export default class BattleScene extends Phaser.Scene {
     private score = 0;
@@ -144,6 +145,15 @@ export default class BattleScene extends Phaser.Scene {
         this.livesText.setText(`lives: ${this.lives}`);
     }
 
+    powerUpSwatter() {
+        this.swatter.setScale(2, 2);
+        this.swatter.poweredUp = true;
+        setTimeout(() => {
+            this.swatter.setScale(1, 1);
+            this.swatter.poweredUp = false;
+        }, 10000);
+    }
+
     addScore(score: number) {
         this.score += score;
         this.scoreText.setText(`score: ${this.score}`);
@@ -199,30 +209,25 @@ export default class BattleScene extends Phaser.Scene {
         this.swatter.playSwatAnim();
         this.checkSwat(this.flies);
         this.checkSwat(this.hornets);
-        this.lifePowerups.children.iterate((life: Life) => {
-            if (this.swatter.hoversOver(life)) {
-                life.disableBody(true, true);
-                this.incrementLife();
+        this.lifePowerups.children.iterate((life: any) => {
+            const swattable = life as SwattableObject;
+            if (this.swatter.hoversOver(swattable)) {
+                swattable.swat();
             }
         });
-        this.powerups.children.iterate((powerup: Powerup) => {
-            if (this.swatter.hoversOver(powerup)) {
-                powerup.disableBody(true, true);
-                this.swatter.setScale(2, 2);
-                this.swatter.poweredUp = true;
-                setTimeout(() => {
-                    this.swatter.setScale(1, 1);
-                    this.swatter.poweredUp = false;
-                }, 10000);
+        this.powerups.children.iterate((powerup: any) => {
+            const swattable = powerup as SwattableObject;
+            if (this.swatter.hoversOver(swattable)) {
+                swattable.swat();
             }
         });
     }
 
     private checkSwat(bugs: Phaser.GameObjects.Group) {
-        bugs.children.iterate((bug: Bug) => {
-            if (this.swatter.hoversOver(bug)) {
-                bug.disableBody(true, true);
-                this.addScore(bug.score);
+        bugs.children.iterate((bug: any) => {
+            const swattable = bug as SwattableObject;
+            if (this.swatter.hoversOver(swattable)) {
+                swattable.swat();
             }
         });
     }

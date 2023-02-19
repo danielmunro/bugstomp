@@ -1,6 +1,7 @@
 import BattleScene from "../scenes/BattleScene";
+import SwattableObject from "../interfaces/SwattableObject";
 
-export default class Bug extends Phaser.Physics.Arcade.Sprite {
+export default class Bug extends Phaser.Physics.Arcade.Sprite implements SwattableObject {
     private readonly textureKey: string;
     public readonly score: number;
 
@@ -33,8 +34,8 @@ export default class Bug extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
-    swat(scene: BattleScene) {
+    swat() {
         this.disableBody(true, true);
-        scene.addScore(this.score);
+        // scene.addScore(this.score);
     }
 }

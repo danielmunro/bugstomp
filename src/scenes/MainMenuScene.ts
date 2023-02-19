@@ -1,10 +1,10 @@
 import Swatter from "../objects/Swatter"
+import Button from "../objects/ui/Button"
+import SwattableObject from "../interfaces/SwattableObject"
 
 export default class MainMenuScene extends Phaser.Scene {
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-  private buttons: Phaser.GameObjects.Image[] = [];
-  private selectedButtonIndex = 0;
-  private buttonSelector!: Phaser.GameObjects.Image;
+  private buttons: SwattableObject[] = [];
   private swatter: Swatter;
 
   constructor() {
@@ -27,21 +27,21 @@ export default class MainMenuScene extends Phaser.Scene {
     const { width, height } = this.scale;
 
     // Play button
-    const playButton = this.add.image(width * 0.5, height * 0.5, 'glass-panel')
+    const playButton = new Button(this, width / 2, height / 2, 'glass-panel')
       .setDisplaySize(150, 50);
 
     this.add.text(playButton.x, playButton.y, 'Play')
       .setOrigin(0.5);
 
     // Settings button
-    const settingsButton = this.add.image(playButton.x, playButton.y + playButton.displayHeight + 40, 'glass-panel')
+    const settingsButton = new Button(this, playButton.x, playButton.y + playButton.displayHeight + 40, 'glass-panel')
       .setDisplaySize(150, 50);
 
     this.add.text(settingsButton.x, settingsButton.y, 'Settings')
       .setOrigin(0.5);
 
     // Credits button
-    const creditsButton = this.add.image(settingsButton.x, settingsButton.y + settingsButton.displayHeight + 40, 'glass-panel')
+    const creditsButton = new Button(this, settingsButton.x, settingsButton.y + settingsButton.displayHeight + 40, 'glass-panel')
       .setDisplaySize(150, 50);
 
     this.add.text(creditsButton.x, creditsButton.y, 'Credits')
@@ -90,7 +90,7 @@ export default class MainMenuScene extends Phaser.Scene {
     this.swatter.playSwatAnim();
     this.buttons.forEach((button) => {
       if (this.swatter.hoversOver(button)) {
-        button.emit('selected');
+        button.swat();
       }
     });
   }
@@ -99,9 +99,9 @@ export default class MainMenuScene extends Phaser.Scene {
     const pointer = this.input.activePointer;
     this.swatter.setPosition(pointer.x, pointer.y + 16);
     this.buttons.forEach((button) => {
-      button.setTint(0xffffff);
+      // button.setTint(0xffffff);
       if (this.swatter.hoversOver(button)) {
-        button.setTint(0x66ff7f);
+        // button.setTint(0x66ff7f);
       }
     });
   }
