@@ -25,6 +25,9 @@ export default class Bug extends Phaser.Physics.Arcade.Sprite implements Swattab
                 }, attackTimeout);
             }
         }, moveTimeout);
+        this.on('score', () => {
+           scene.addScore(this.score);
+        });
     }
 
     changeVelocity() {
@@ -36,6 +39,6 @@ export default class Bug extends Phaser.Physics.Arcade.Sprite implements Swattab
 
     swat() {
         this.disableBody(true, true);
-        // scene.addScore(this.score);
+        this.emit('score', this.score);
     }
 }

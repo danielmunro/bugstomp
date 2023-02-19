@@ -162,9 +162,7 @@ export default class BattleScene extends Phaser.Scene {
     private createPowerUp() {
         const y = height + 16;
         const x = Phaser.Math.Between(100, width - 100);
-        const powerup = new Powerup(this, x, y, 'powerup');
-        this.add.existing(powerup);
-        this.powerups.add(powerup);
+        const powerup = new Powerup(this, this.powerups, x, y, 'powerup');
         powerup.setVelocityY(-100);
         const moveInt = setInterval(() => {
             if (powerup.y < 0) {
@@ -181,9 +179,7 @@ export default class BattleScene extends Phaser.Scene {
     private create1Up() {
         const y = height + 16;
         const x = Phaser.Math.Between(100, width - 100);
-        const life = new Life(this, x, y, 'life');
-        this.add.existing(life);
-        this.lifePowerups.add(life);
+        const life = new Life(this, this.lifePowerups, x, y, 'life');
         life.setVelocityY(-100);
         const moveInt = setInterval(() => {
             if (life.y < 0) {

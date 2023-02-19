@@ -29,6 +29,7 @@ export default class MainMenuScene extends Phaser.Scene {
     // Play button
     const playButton = new Button(this, width / 2, height / 2, 'glass-panel')
       .setDisplaySize(150, 50);
+    this.add.existing(playButton);
 
     this.add.text(playButton.x, playButton.y, 'Play')
       .setOrigin(0.5);
@@ -36,6 +37,7 @@ export default class MainMenuScene extends Phaser.Scene {
     // Settings button
     const settingsButton = new Button(this, playButton.x, playButton.y + playButton.displayHeight + 40, 'glass-panel')
       .setDisplaySize(150, 50);
+    this.add.existing(settingsButton);
 
     this.add.text(settingsButton.x, settingsButton.y, 'Settings')
       .setOrigin(0.5);
@@ -43,6 +45,7 @@ export default class MainMenuScene extends Phaser.Scene {
     // Credits button
     const creditsButton = new Button(this, settingsButton.x, settingsButton.y + settingsButton.displayHeight + 40, 'glass-panel')
       .setDisplaySize(150, 50);
+    this.add.existing(creditsButton);
 
     this.add.text(creditsButton.x, creditsButton.y, 'Credits')
       .setOrigin(0.5);
@@ -81,7 +84,6 @@ export default class MainMenuScene extends Phaser.Scene {
     });
 
     this.input.on('pointerup', this.swat.bind(this));
-
     this.input.setDefaultCursor('none');
     this.swatter = new Swatter(this);
   }
@@ -98,10 +100,11 @@ export default class MainMenuScene extends Phaser.Scene {
   update() {
     const pointer = this.input.activePointer;
     this.swatter.setPosition(pointer.x, pointer.y + 16);
-    this.buttons.forEach((button) => {
-      // button.setTint(0xffffff);
+    this.buttons.forEach((button: any) => {
+      const uiButton = button as Phaser.GameObjects.Image;
+      uiButton.setTint(0xffffff);
       if (this.swatter.hoversOver(button)) {
-        // button.setTint(0x66ff7f);
+        uiButton.setTint(0x66ff7f);
       }
     });
   }
