@@ -262,27 +262,8 @@ export default class BattleScene extends Phaser.Scene {
 
     private sendFlyWave() {
         const side = Phaser.Math.Between(0, 4);
-        const x = width / 4;
-        const y = height / 4;
         const velocity = side < 2 ? -150 : 150;
-        const coords: Array<Array<number>> = [];
-        if (side === 0) {
-            coords.push([x, y * 3]);
-            coords.push([x * 2, y * 3]);
-            coords.push([x * 3, y * 3]);
-        } else if (side === 1) {
-            coords.push([x * 3, y]);
-            coords.push([x * 3, y * 2]);
-            coords.push([x * 3, y * 3]);
-        } else if (side === 2) {
-            coords.push([x, y]);
-            coords.push([x * 2, y]);
-            coords.push([x * 3, y]);
-        } else if (side === 3) {
-            coords.push([x, y]);
-            coords.push([x, y * 2]);
-            coords.push([x, y * 3]);
-        }
+        const coords = BattleScene.getCoords(side);
         coords.forEach((coord) => {
             const bug = new Fly(this, this.flies, coord[0], coord[1]);
             if (side % 2 == 0) {
@@ -296,10 +277,23 @@ export default class BattleScene extends Phaser.Scene {
 
     private sendHornetWave() {
         const side = Phaser.Math.Between(0, 4);
+        const velocity = side < 2 ? -150 : 150;
+        const coords = BattleScene.getCoords(side);
+        coords.forEach((coord) => {
+            const bug = new Hornet(this, this.hornets, coord[0], coord[1]);
+            if (side % 2 == 0) {
+                bug.setVelocityY(velocity);
+            } else {
+                bug.setVelocityX(velocity);
+            }
+            setTimeout(() => bug.changeVelocity(), Phaser.Math.Between(2000, 4000));
+        });
+    }
+
+    private static getCoords(side: number): Array<Array<number>> {
+        const coords: Array<Array<number>> = [];
         const x = width / 4;
         const y = height / 4;
-        const velocity = side < 2 ? -150 : 150;
-        const coords: Array<Array<number>> = [];
         if (side === 0) {
             coords.push([x, y * 3]);
             coords.push([x * 2, y * 3]);
@@ -317,14 +311,6 @@ export default class BattleScene extends Phaser.Scene {
             coords.push([x, y * 2]);
             coords.push([x, y * 3]);
         }
-        coords.forEach((coord) => {
-            const bug = new Hornet(this, this.hornets, coord[0], coord[1]);
-            if (side % 2 == 0) {
-                bug.setVelocityY(velocity);
-            } else {
-                bug.setVelocityX(velocity);
-            }
-            setTimeout(() => bug.changeVelocity(), Phaser.Math.Between(2000, 4000));
-        });
+        return coords;
     }
 }
