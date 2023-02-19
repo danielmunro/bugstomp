@@ -22,7 +22,7 @@ export default class BattleScene extends Phaser.Scene {
     private intervals: Array<NodeJS.Timer> = [];
 
     constructor() {
-        super({ key: 'battle-scene' });
+        super('battle');
     }
 
     preload(): void {

@@ -3,16 +3,11 @@ import Button from "../objects/ui/Button"
 import SwattableObject from "../interfaces/SwattableObject"
 
 export default class MainMenuScene extends Phaser.Scene {
-  private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
   private buttons: SwattableObject[] = [];
   private swatter: Swatter;
 
   constructor() {
     super('main-menu');
-  }
-
-  init() {
-    this.cursors = this.input.keyboard.createCursorKeys();
   }
 
   preload() {
@@ -55,15 +50,15 @@ export default class MainMenuScene extends Phaser.Scene {
     this.buttons.push(creditsButton);
 
     playButton.on('selected', () => {
-      this.scene.start('battle-scene');
+      this.scene.start('battle');
     });
 
     settingsButton.on('selected', () => {
-      console.log('settings')
+      this.scene.start('settings');
     });
 
     creditsButton.on('selected', () => {
-      console.log('credits')
+      this.scene.start('credits');
     });
 
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
