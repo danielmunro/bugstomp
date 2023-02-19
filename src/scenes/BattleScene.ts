@@ -4,6 +4,7 @@ import Fly from '../objects/Fly';
 import Hornet from '../objects/Hornet';
 import Swatter from '../objects/Swatter';
 import Life from "../objects/Life"
+import Powerup from "../objects/Powerup"
 
 export default class BattleScene extends Phaser.Scene {
     private score = 0;
@@ -14,6 +15,7 @@ export default class BattleScene extends Phaser.Scene {
     private flies: Phaser.GameObjects.Group;
     private hornets: Phaser.GameObjects.Group;
     private lifePowerups: Phaser.GameObjects.Group;
+    private powerups: Phaser.GameObjects.Group;
     private lives = 3;
     private gameOver = false;
     private gameTimer = 0;
@@ -29,6 +31,7 @@ export default class BattleScene extends Phaser.Scene {
         this.load.image('sky', 'assets/sky.png');
         this.load.image('star', 'assets/star.png');
         this.load.image('life', 'assets/level-up.png');
+        this.load.image('powerup', 'assets/level-up.png');
         this.load.spritesheet('fly',
             'assets/fly.png',
             { frameWidth: 32, frameHeight: 32 }
@@ -56,6 +59,7 @@ export default class BattleScene extends Phaser.Scene {
         this.flies = this.physics.add.group();
         this.hornets = this.physics.add.group();
         this.lifePowerups = this.physics.add.group();
+        this.powerups = this.physics.add.group();
         this.anims.create({
             key: 'fly',
             frames: this.anims.generateFrameNumbers('fly', { start: 0, end: 1 }),
@@ -106,6 +110,7 @@ export default class BattleScene extends Phaser.Scene {
         this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
         this.intervals.push(setInterval(() => this.sendWave(), 8000));
         this.intervals.push(setInterval(() => this.create1Up(), 18000));
+        this.intervals.push(setInterval(() => this.createPowerUp(), 10000));
     }
 
     update() {
@@ -132,6 +137,35 @@ export default class BattleScene extends Phaser.Scene {
         }
         this.lives -= 1;
         this.livesText.setText(`lives: ${this.lives}`);
+    }
+
+    incrementLife() {
+        this.lives++;
+        this.livesText.setText(`lives: ${this.lives}`);
+    }
+
+    addScore(score: number) {
+        this.score += score;
+        this.scoreText.setText(`score: ${this.score}`);
+    }
+
+    private createPowerUp() {
+        const y = height + 16;
+        const x = Phaser.Math.Between(100, width - 100);
+        const powerup = new Powerup(this, x, y, 'powerup');
+        this.add.existing(powerup);
+        this.powerups.add(powerup);
+        powerup.setVelocityY(-100);
+        const moveInt = setInterval(() => {
+            if (powerup.y < 0) {
+                powerup.disableBody(true, true);
+            }
+            if (powerup.active) {
+                powerup.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);
+            } else {
+                clearTimeout(moveInt);
+            }
+        }, 800);
     }
 
     private create1Up() {
@@ -168,8 +202,18 @@ export default class BattleScene extends Phaser.Scene {
         this.lifePowerups.children.iterate((life: Life) => {
             if (this.swatter.hoversOver(life)) {
                 life.disableBody(true, true);
-                this.lives++;
-                this.livesText.setText(`lives: ${this.lives}`);
+                this.incrementLife();
+            }
+        });
+        this.powerups.children.iterate((powerup: Powerup) => {
+            if (this.swatter.hoversOver(powerup)) {
+                powerup.disableBody(true, true);
+                this.swatter.setScale(2, 2);
+                this.swatter.poweredUp = true;
+                setTimeout(() => {
+                    this.swatter.setScale(1, 1);
+                    this.swatter.poweredUp = false;
+                }, 10000);
             }
         });
     }
@@ -177,15 +221,10 @@ export default class BattleScene extends Phaser.Scene {
     private checkSwat(bugs: Phaser.GameObjects.Group) {
         bugs.children.iterate((bug: Bug) => {
             if (this.swatter.hoversOver(bug)) {
-                this.swatBug(bug);
+                bug.disableBody(true, true);
+                this.addScore(bug.score);
             }
         });
-    }
-
-    private swatBug(bug: Bug) {
-        bug.disableBody(true, true);
-        this.score += bug.score;
-        this.scoreText.setText(`score: ${this.score}`);
     }
 
     private createFly() {

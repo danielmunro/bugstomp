@@ -32,4 +32,9 @@ export default class Bug extends Phaser.Physics.Arcade.Sprite {
             setTimeout(() => this.changeVelocity(), Phaser.Math.Between(1000, 4000));
         }
     }
+
+    swat(scene: BattleScene) {
+        this.disableBody(true, true);
+        scene.addScore(this.score);
+    }
 }
