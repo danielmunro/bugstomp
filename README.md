@@ -30,13 +30,26 @@ yarn dev
   * add settings scene
     * difficulty
     * enable global leaderboard
-  * add credits scene
 * Enemy behaviors
   * magic numbers into configuration to support difficulty settings
   * waves of attacks (intensity dial?)
 * Level development
   * add a boss
   * does a boss mean multiple levels?
+* Animations
+  * super size gained
+  * got hit
+  * game over
+* Audio
+  * main menu music
+  * main game loop music
+  * 0 lives remaining panic music
+  * sound effects
+    * swatting
+    * fly death
+    * hornet death
+    * gain life
+    * gain super size
 * Considerations
   * hire a pro artist
   * global leaderboard
