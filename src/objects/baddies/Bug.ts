@@ -1,5 +1,5 @@
-import BattleScene from "../scenes/BattleScene";
-import SwattableObject from "../interfaces/SwattableObject";
+import BattleScene from "../../scenes/BattleScene";
+import SwattableObject from "../../interfaces/SwattableObject";
 
 export default class Bug extends Phaser.Physics.Arcade.Sprite implements SwattableObject {
     private readonly textureKey: string;

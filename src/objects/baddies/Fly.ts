@@ -1,4 +1,4 @@
-import BattleScene from '../scenes/BattleScene';
+import BattleScene from '../../scenes/BattleScene';
 import Bug from './Bug';
 
 export default class Fly extends Bug {

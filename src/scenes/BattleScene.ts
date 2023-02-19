@@ -1,10 +1,10 @@
 import { width, height } from '../config';
-import Bug from '../objects/Bug';
-import Fly from '../objects/Fly';
-import Hornet from '../objects/Hornet';
+import Bug from '../objects/baddies/Bug';
+import Fly from '../objects/baddies/Fly';
+import Hornet from '../objects/baddies/Hornet';
 import Swatter from '../objects/Swatter';
-import Life from "../objects/Life"
-import Powerup from "../objects/Powerup"
+import Life from "../objects/powerups/Life"
+import SuperSize from "../objects/powerups/SuperSize"
 import SwattableObject from "../interfaces/SwattableObject"
 
 export default class BattleScene extends Phaser.Scene {
@@ -148,7 +148,7 @@ export default class BattleScene extends Phaser.Scene {
     private createPowerUp() {
         const y = height + 16;
         const x = Phaser.Math.Between(100, width - 100);
-        const powerup = new Powerup(this, this.swattables, x, y, 'powerup');
+        const powerup = new SuperSize(this, this.swattables, x, y, 'powerup');
         powerup.setVelocityY(-100);
         const moveInt = setInterval(() => {
             if (powerup.y < 0) {
