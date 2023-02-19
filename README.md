@@ -23,3 +23,21 @@ Run the game:
 ```
 yarn dev
 ```
+
+# Todos
+
+* Menu
+  * add settings scene
+    * difficulty
+    * enable global leaderboard
+  * add credits scene
+* Enemy behaviors
+  * magic numbers into configuration to support difficulty settings
+  * waves of attacks (intensity dial?)
+* Level development
+  * add a boss
+  * does a boss mean multiple levels?
+* Considerations
+  * hire a pro artist
+  * global leaderboard
+  * timeline
