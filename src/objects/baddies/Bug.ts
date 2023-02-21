@@ -35,24 +35,12 @@ export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implement
 
   abstract changeVelocity(swatter: Swatter): void;
 
+  abstract attack(): void;
+
   private startLifecycle() {
     if (this.active) {
       this.anims.play(`${this.textureKey}-attacking`, true);
       setTimeout(() => this.attack(), this.attackTimeout);
-    }
-  }
-
-  private attack() {
-    if (this.active) {
-      this.disableBody(true, true);
-      const scene = this.scene as BattleScene;
-      const explosion = new ExplosionAffect(scene, this.x, this.y);
-      explosion.anims.play('explosion-affect')
-        .once(
-          Phaser.Animations.Events.ANIMATION_COMPLETE,
-          () => explosion.destroy(true),
-          );
-      scene.gotHit();
     }
   }
 

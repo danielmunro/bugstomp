@@ -7,6 +7,7 @@ import Life from "../objects/powerups/Life";
 import SuperSize from "../objects/powerups/SuperSize";
 import SwattableObject from "../interfaces/SwattableObject";
 import LifeAffect from "../objects/affects/LifeAffect";
+import ExplosionAffect from "../objects/affects/ExplosionAffect";
 
 export default class BattleScene extends Phaser.Scene {
   private score = 0;
@@ -156,6 +157,14 @@ export default class BattleScene extends Phaser.Scene {
     this.swatter.setPosition(pointer.x, pointer.y + 16);
     if (this.lifeAffect) {
       this.lifeAffect.setPosition(pointer.x, pointer.y + 16);
+    }
+  }
+
+  flyExploded(explosion: ExplosionAffect) {
+    const explosionBounds = explosion.getBounds();
+    const swatterBounds = this.swatter.getBounds();
+    if (Phaser.Geom.Intersects.RectangleToRectangle(explosionBounds, swatterBounds)) {
+      this.gotHit();
     }
   }
 
