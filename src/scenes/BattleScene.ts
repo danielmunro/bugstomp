@@ -6,6 +6,7 @@ import Swatter from '../objects/Swatter';
 import Life from "../objects/powerups/Life";
 import SuperSize from "../objects/powerups/SuperSize";
 import SwattableObject from "../interfaces/SwattableObject";
+import LifeAffect from "../objects/affects/LifeAffect";
 
 export default class BattleScene extends Phaser.Scene {
   private score = 0;
@@ -158,7 +159,7 @@ export default class BattleScene extends Phaser.Scene {
   incrementLife() {
     this.lives++;
     this.livesText.setText(`lives: ${this.lives}`);
-    this.lifeAffect = this.add.sprite(this.swatter.x, this.swatter.y, 'life-affect');
+    this.lifeAffect = new LifeAffect(this, this.swatter.x, this.swatter.y);
     this.lifeAffect.setDepth(2);
     if (this.swatter.poweredUp) {
       this.lifeAffect.setScale(1.5, 1.5);
