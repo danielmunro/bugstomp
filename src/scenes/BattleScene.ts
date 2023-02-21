@@ -57,6 +57,10 @@ export default class BattleScene extends Phaser.Scene {
       'assets/life-affect.png',
       {frameWidth: 32, frameHeight: 48}
     );
+    this.load.spritesheet('explosion-affect',
+      'assets/explosion-affect.png',
+      {frameWidth: 48, frameHeight: 48}
+    );
   }
 
   create(): void {
@@ -100,6 +104,15 @@ export default class BattleScene extends Phaser.Scene {
       }),
       frameRate: 20,
       repeat: -1,
+    });
+    this.anims.create({
+      key: 'explosion-affect',
+      frames: this.anims.generateFrameNumbers('explosion-affect', {
+        start: 0,
+        end: 1
+      }),
+      frameRate: 20,
+      repeat: 0,
     });
 
     const fontStyle = {fontSize: '32px', fill: '#000'};
