@@ -17,11 +17,12 @@ export default class Swatter extends Phaser.Physics.Arcade.Sprite {
 
     hoversOver(sprite: SwattableObject) {
         const pos = this.getBounds();
-        const size = this.poweredUp ? 32 : 16;
+        const size = this.poweredUp ? 24 : 16;
         pos.height = size;
         pos.width = size;
-        pos.x = pos.x + 8;
-        pos.y = pos.y + 8;
+        const margin = this.poweredUp ? 4 : 8;
+        pos.x = pos.x + margin;
+        pos.y = pos.y + margin;
         return Phaser.Geom.Intersects.RectangleToRectangle(pos, sprite.getBounds());
     }
 
