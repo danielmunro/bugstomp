@@ -169,13 +169,26 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   gotHit() {
-    if (this.lives < 1 && !this.invincible) {
+    if (this.invincible) {
+      return;
+    }
+    if (this.lives < 1) {
       this.physics.pause();
       this.gameOver = true;
       return;
     }
     this.lives -= 1;
     this.livesText.setText(`lives: ${this.lives}`);
+    this.invincible = true;
+    const flashInt = setInterval(
+      () => this.swatter.setAlpha(this.swatter.alpha === 0.25 ? 1 : 0.25),
+      50,
+      );
+    setTimeout(() => {
+      clearInterval(flashInt);
+      this.swatter.clearAlpha();
+      this.invincible = false;
+    }, 600);
   }
 
   incrementLife() {
