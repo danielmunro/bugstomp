@@ -189,9 +189,11 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
-  createProjectile(hornet: Hornet) {
-    const projectile = new Projectile(this, this.projectiles, hornet.x, hornet.y + (hornet.height / 2));
-    projectile.setVelocity(-(hornet.x - this.swatter.x), -(hornet.y - this.swatter.y));
+  createProjectile(h: Hornet) {
+    const p = new Projectile(this, this.projectiles, h.x, h.y + (h.height / 2));
+    const angleDeg = (Math.atan2(this.swatter.y - p.y , this.swatter.x - p.x) * 180 / Math.PI);
+    const velocity = this.physics.velocityFromAngle(angleDeg, 200);
+    p.setVelocity(velocity.x, velocity.y);
   }
 
   gotHit() {
