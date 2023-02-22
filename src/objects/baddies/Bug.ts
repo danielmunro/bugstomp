@@ -33,7 +33,7 @@ export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implement
     });
   }
 
-  abstract changeVelocity(swatter: Swatter): void;
+  abstract changeVelocity(): void;
 
   abstract attack(): void;
 

@@ -8,6 +8,7 @@ import SuperSize from "../objects/powerups/SuperSize";
 import SwattableObject from "../interfaces/SwattableObject";
 import LifeAffect from "../objects/affects/LifeAffect";
 import ExplosionAffect from "../objects/affects/ExplosionAffect";
+import Projectile from "../objects/baddies/Projectile";
 
 export default class BattleScene extends Phaser.Scene {
   private score = 0;
@@ -16,6 +17,7 @@ export default class BattleScene extends Phaser.Scene {
   private timerLabel: Phaser.GameObjects.Text;
   private swatter: Swatter;
   private swattables: Phaser.GameObjects.Group;
+  private projectiles: Phaser.GameObjects.Group;
   private lives = 3;
   private gameOver = false;
   private gameTimer = 0;
@@ -34,6 +36,7 @@ export default class BattleScene extends Phaser.Scene {
     this.load.image('star', 'assets/star.png');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
+    this.load.image('projectile', 'assets/projectile.png');
     this.load.spritesheet('fly',
       'assets/fly.png',
       {frameWidth: 32, frameHeight: 32}
@@ -67,6 +70,7 @@ export default class BattleScene extends Phaser.Scene {
   create(): void {
     this.add.image(width / 2, height / 2, 'sky');
     this.swattables = this.physics.add.group();
+    this.projectiles = this.physics.add.group();
     this.anims.create({
       key: 'fly',
       frames: this.anims.generateFrameNumbers('fly', {start: 0, end: 1}),
@@ -136,6 +140,13 @@ export default class BattleScene extends Phaser.Scene {
     this.flyCreateCounter = 1000;
     this.createFly();
 
+    // const test = this.physics.add.group();
+    // test.add(this.swatter);
+    // this.physics.collide(test, this.projectiles, () => {
+    //   console.log("COLLISION DETECTED");
+    //   this.gotHit();
+    // });
+
     this.intervals.push(setInterval(() => this.createFly(), 100));
     this.intervals.push(setInterval(() => this.createHornet(), 100));
     this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
@@ -158,6 +169,16 @@ export default class BattleScene extends Phaser.Scene {
     if (this.lifeAffect) {
       this.lifeAffect.setPosition(pointer.x, pointer.y + 16);
     }
+    this.projectiles.children.each((projectile) => {
+      const p = projectile as Projectile;
+      if (Phaser.Geom.Intersects.RectangleToRectangle(p.getBounds(), this.swatter.getBounds())) {
+        this.gotHit();
+      }
+    });
+  }
+
+  getSwatter(): Swatter {
+    return this.swatter;
   }
 
   flyExploded(explosion: ExplosionAffect) {
@@ -166,6 +187,11 @@ export default class BattleScene extends Phaser.Scene {
     if (Phaser.Geom.Intersects.RectangleToRectangle(explosionBounds, swatterBounds)) {
       this.gotHit();
     }
+  }
+
+  createProjectile(hornet: Hornet) {
+    const projectile = new Projectile(this, this.projectiles, hornet.x, hornet.y + (hornet.height / 2));
+    projectile.setVelocity(-(hornet.x - this.swatter.x), -(hornet.y - this.swatter.y));
   }
 
   gotHit() {
@@ -274,7 +300,7 @@ export default class BattleScene extends Phaser.Scene {
     this.flyCreateCounter = 0;
     const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
     const fly = new Fly(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
-    fly.changeVelocity(this.swatter);
+    fly.changeVelocity();
   }
 
   private createHornet() {
@@ -285,7 +311,7 @@ export default class BattleScene extends Phaser.Scene {
     this.hornetCreateCounter = 0;
     const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
     const hornet = new Hornet(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
-    hornet.changeVelocity(this.swatter);
+    hornet.changeVelocity();
   }
 
   private updateGameTimer() {
@@ -304,7 +330,7 @@ export default class BattleScene extends Phaser.Scene {
       } else {
         bug.setVelocityX(velocity);
       }
-      setTimeout(() => bug.changeVelocity(this.swatter), Phaser.Math.Between(3000, 5000));
+      setTimeout(() => bug.changeVelocity(), Phaser.Math.Between(3000, 5000));
     });
   }
 
@@ -319,7 +345,7 @@ export default class BattleScene extends Phaser.Scene {
       } else {
         bug.setVelocityX(velocity);
       }
-      setTimeout(() => bug.changeVelocity(this.swatter), Phaser.Math.Between(2000, 4000));
+      setTimeout(() => bug.changeVelocity(), Phaser.Math.Between(2000, 4000));
     });
   }
 

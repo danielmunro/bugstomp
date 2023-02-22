@@ -8,15 +8,17 @@ export default class Fly extends Bug {
     super(scene, group, x, y, 'fly', 10, 4000, 3000);
   }
 
-  changeVelocity(swatter: Swatter) {
+  changeVelocity() {
     if (this.active) {
       const towardRandomizer = Phaser.Math.Between(0, 2);
       const speed = Phaser.Math.Between(40, 100);
+      const scene = this.scene as BattleScene;
+      const swatter = scene.getSwatter();
       this.setVelocity(
         this.x > swatter.x && towardRandomizer < 2 ? -speed : speed,
         this.y > swatter.y && towardRandomizer < 2 ? -speed : speed,
       );
-      setTimeout(() => this.changeVelocity(swatter), 500);
+      setTimeout(() => this.changeVelocity(), 500);
     }
   }
 
