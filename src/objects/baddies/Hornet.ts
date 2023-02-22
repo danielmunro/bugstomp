@@ -1,6 +1,5 @@
 import BattleScene from '../../scenes/BattleScene';
 import Bug from './Bug';
-import Swatter from "../Swatter";
 
 export default class Hornet extends Bug {
     constructor(scene: BattleScene, group: Phaser.GameObjects.Group, x: number, y: number) {
@@ -23,6 +22,7 @@ export default class Hornet extends Bug {
                 if (created >= 3) {
                     clearInterval(createAttackInt);
                     this.changeVelocity();
+                    this.startLifecycle();
                     return;
                 }
                 scene.createProjectile(this);

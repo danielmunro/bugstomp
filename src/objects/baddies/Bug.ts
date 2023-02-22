@@ -4,7 +4,8 @@ import Swatter from "../Swatter";
 import ExplosionAffect from "../affects/ExplosionAffect";
 
 export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implements SwattableObject {
-  private readonly textureKey: string;
+  protected readonly textureKey: string;
+  private readonly moveTimeout: number;
   private readonly attackTimeout: number;
   public readonly score: number;
 
@@ -25,9 +26,9 @@ export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implement
     scene.add.existing(this);
     this.setCollideWorldBounds(true);
     this.setBounce(1, 1);
-    this.anims.play(texture, true);
     this.attackTimeout = attackTimeout;
-    setTimeout(() => this.startLifecycle(), moveTimeout);
+    this.moveTimeout = moveTimeout;
+    this.startLifecycle();
     this.on('score', () => {
       scene.addScore(this.score);
     });
@@ -37,7 +38,12 @@ export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implement
 
   abstract attack(): void;
 
-  private startLifecycle() {
+  protected startLifecycle() {
+    this.anims.play(this.textureKey, true);
+    setTimeout(() => this.startAttackMode(), this.moveTimeout);
+  }
+
+  private startAttackMode() {
     if (this.active) {
       this.anims.play(`${this.textureKey}-attacking`, true);
       setTimeout(() => this.attack(), this.attackTimeout);
