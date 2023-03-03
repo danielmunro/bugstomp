@@ -264,7 +264,7 @@ export default class BattleScene extends Phaser.Scene {
   private createPowerUp() {
     const y = height + 16;
     const x = Phaser.Math.Between(100, width - 100);
-    const powerup = new SuperSize(this, this.swattables, x, y, 'powerup');
+    const powerup = new SuperSize(this, this.swattables, x, y);
     powerup.setVelocityY(-100);
     const moveInt = setInterval(() => {
       if (powerup.y < 0) {
@@ -281,7 +281,7 @@ export default class BattleScene extends Phaser.Scene {
   private create1Up() {
     const y = height + 16;
     const x = Phaser.Math.Between(100, width - 100);
-    const life = new Life(this, this.swattables, x, y, 'life');
+    const life = new Life(this, this.swattables, x, y);
     life.setVelocityY(-100);
     const moveInt = setInterval(() => {
       if (life.y < 0) {
