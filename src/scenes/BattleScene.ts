@@ -9,6 +9,7 @@ import SwattableObject from "../interfaces/SwattableObject";
 import LifeAffect from "../objects/affects/LifeAffect";
 import ExplosionAffect from "../objects/affects/ExplosionAffect";
 import Projectile from "../objects/baddies/Projectile";
+import Bomb from "../objects/powerups/Bomb";
 
 export default class BattleScene extends Phaser.Scene {
   private score = 0;
@@ -36,6 +37,7 @@ export default class BattleScene extends Phaser.Scene {
     this.load.image('star', 'assets/star.png');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
+    this.load.image('bomb', 'assets/bomb-power-up.png');
     this.load.image('projectile', 'assets/projectile.png');
     this.load.spritesheet('fly',
       'assets/fly.png',
@@ -140,19 +142,13 @@ export default class BattleScene extends Phaser.Scene {
     this.flyCreateCounter = 1000;
     this.createFly();
 
-    // const test = this.physics.add.group();
-    // test.add(this.swatter);
-    // this.physics.collide(test, this.projectiles, () => {
-    //   console.log("COLLISION DETECTED");
-    //   this.gotHit();
-    // });
-
     this.intervals.push(setInterval(() => this.createFly(), 100));
     this.intervals.push(setInterval(() => this.createHornet(), 100));
     this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
     this.intervals.push(setInterval(() => this.sendWave(), 8000));
     this.intervals.push(setInterval(() => this.create1Up(), 18000));
     this.intervals.push(setInterval(() => this.createPowerUp(), 10000));
+    this.intervals.push(setInterval(() => this.createBomb(), 20000));
   }
 
   update() {
@@ -219,6 +215,12 @@ export default class BattleScene extends Phaser.Scene {
     }, 600);
   }
 
+  destroyAll() {
+    this.swattables.children.each((swattable: any) => {
+      swattable.disableBody(true, true);
+    });
+  }
+
   incrementLife() {
     this.lives++;
     this.livesText.setText(`lives: ${this.lives}`);
@@ -240,6 +242,23 @@ export default class BattleScene extends Phaser.Scene {
   addScore(score: number) {
     this.score += score;
     this.scoreText.setText(`score: ${this.score}`);
+  }
+
+  private createBomb() {
+    const y = height + 16;
+    const x = Phaser.Math.Between(100, width - 100);
+    const powerup = new Bomb(this, this.swattables, x, y);
+    powerup.setVelocityY(-100);
+    const moveInt = setInterval(() => {
+      if (powerup.y < 0) {
+        powerup.disableBody(true, true);
+      }
+      if (powerup.active) {
+        powerup.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);
+      } else {
+        clearTimeout(moveInt);
+      }
+    }, 800);
   }
 
   private createPowerUp() {
