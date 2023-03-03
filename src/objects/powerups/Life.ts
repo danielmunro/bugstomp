@@ -12,7 +12,7 @@ export default class Life extends Phaser.Physics.Arcade.Sprite implements Swatta
   }
 
   swat(): void {
-    this.disableBody(true, true);
     this.emit('life');
+    this.disableBody(true, true);
   }
 }

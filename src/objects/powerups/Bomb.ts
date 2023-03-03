@@ -6,13 +6,14 @@ export default class Bomb extends Phaser.Physics.Arcade.Sprite implements Swatta
     super(scene, x, y, 'bomb');
     scene.add.existing(this);
     group.add(this);
+    this.anims.play(this.texture, true);
     this.on('boom', () => {
       scene.destroyAll();
     });
   }
 
   swat(): void {
-    this.disableBody(true, true);
     this.emit('boom');
+    this.disableBody(true, true);
   }
 }

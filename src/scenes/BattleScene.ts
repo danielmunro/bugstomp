@@ -1,5 +1,4 @@
 import {width, height} from '../config';
-import Bug from '../objects/baddies/Bug';
 import Fly from '../objects/baddies/Fly';
 import Hornet from '../objects/baddies/Hornet';
 import Swatter from '../objects/Swatter';
@@ -37,7 +36,6 @@ export default class BattleScene extends Phaser.Scene {
     this.load.image('star', 'assets/star.png');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
-    this.load.image('bomb', 'assets/bomb-power-up.png');
     this.load.image('projectile', 'assets/projectile.png');
     this.load.spritesheet('fly',
       'assets/fly.png',
@@ -66,6 +64,10 @@ export default class BattleScene extends Phaser.Scene {
     this.load.spritesheet('explosion-affect',
       'assets/explosion-affect.png',
       {frameWidth: 48, frameHeight: 48}
+    );
+    this.load.spritesheet('bomb',
+      'assets/bomb-power-up.png',
+      {frameWidth: 32, frameHeight: 32}
     );
   }
 
@@ -121,6 +123,15 @@ export default class BattleScene extends Phaser.Scene {
       frameRate: 20,
       repeat: 0,
     });
+    this.anims.create({
+      key: 'bomb',
+      frames: this.anims.generateFrameNumbers('bomb', {
+        start: 0,
+        end: 2,
+      }),
+      frameRate: 20,
+      repeat: -1,
+    });
 
     const fontStyle = {fontSize: '32px', fill: '#000'};
     this.scoreText = this.add.text(16, 16, 'score: 0', fontStyle);
@@ -171,6 +182,11 @@ export default class BattleScene extends Phaser.Scene {
         this.gotHit();
       }
     });
+    this.swattables.children.each((swattable) => {
+      if (!swattable.active) {
+        this.swattables.remove(swattable);
+      }
+    });
   }
 
   getSwatter(): Swatter {
@@ -217,7 +233,19 @@ export default class BattleScene extends Phaser.Scene {
 
   destroyAll() {
     this.swattables.children.each((swattable: any) => {
-      swattable.disableBody(true, true);
+      if (swattable instanceof Bomb) {
+        return;
+      }
+      const sw = swattable as SwattableObject;
+      const explosion = new ExplosionAffect(this, sw.x, sw.y);
+      explosion.anims.play('explosion-affect')
+        .once(
+          Phaser.Animations.Events.ANIMATION_COMPLETE,
+          () => {
+            explosion.destroy(true);
+            sw.swat();
+          },
+        );
     });
   }
 
@@ -252,6 +280,7 @@ export default class BattleScene extends Phaser.Scene {
     const moveInt = setInterval(() => {
       if (powerup.y < 0) {
         powerup.disableBody(true, true);
+        this.swattables.remove(powerup);
       }
       if (powerup.active) {
         powerup.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);
@@ -269,6 +298,7 @@ export default class BattleScene extends Phaser.Scene {
     const moveInt = setInterval(() => {
       if (powerup.y < 0) {
         powerup.disableBody(true, true);
+        this.swattables.remove(powerup);
       }
       if (powerup.active) {
         powerup.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);
@@ -286,6 +316,7 @@ export default class BattleScene extends Phaser.Scene {
     const moveInt = setInterval(() => {
       if (life.y < 0) {
         life.disableBody(true, true);
+        this.swattables.remove(life);
       }
       if (life.active) {
         life.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);

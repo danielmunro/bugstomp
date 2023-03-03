@@ -12,7 +12,7 @@ export default class SuperSize extends Phaser.Physics.Arcade.Sprite implements S
   }
 
   swat(): void {
-    this.disableBody(true, true);
     this.emit('supersize');
+    this.disableBody(true, true);
   }
 }

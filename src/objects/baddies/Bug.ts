@@ -29,7 +29,7 @@ export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implement
     this.attackTimeout = attackTimeout;
     this.moveTimeout = moveTimeout;
     this.startLifecycle();
-    this.on('score', () => {
+    this.on('swat', () => {
       scene.addScore(this.score);
     });
   }
@@ -51,7 +51,7 @@ export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implement
   }
 
   swat() {
+    this.emit('swat');
     this.disableBody(true, true);
-    this.emit('score', this.score);
   }
 }
