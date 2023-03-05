@@ -384,7 +384,7 @@ export default class BattleScene extends Phaser.Scene {
 
   private createDragonfly() {
     this.dragonflyCreateCounter++;
-    if (this.gameTimer < 1 || this.dragonflyCreateCounter < 50) {
+    if (this.gameTimer < 10 || this.dragonflyCreateCounter < 100) {
       return;
     }
     this.dragonflyCreateCounter = 0;
