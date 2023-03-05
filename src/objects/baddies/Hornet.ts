@@ -25,7 +25,7 @@ export default class Hornet extends Bug {
                     this.startLifecycle();
                     return;
                 }
-                scene.createProjectile(this);
+                scene.createProjectile(this, 200);
                 created++;
             }, 100);
         }

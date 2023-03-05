@@ -9,6 +9,7 @@ import LifeAffect from "../objects/affects/LifeAffect";
 import ExplosionAffect from "../objects/affects/ExplosionAffect";
 import Projectile from "../objects/baddies/Projectile";
 import Bomb from "../objects/powerups/Bomb";
+import Dragonfly from "../objects/baddies/Dragonfly";
 
 export default class BattleScene extends Phaser.Scene {
   private score = 0;
@@ -23,6 +24,7 @@ export default class BattleScene extends Phaser.Scene {
   private gameTimer = 0;
   private flyCreateCounter = 0;
   private hornetCreateCounter = 0;
+  private dragonflyCreateCounter = 0;
   private intervals: Array<NodeJS.Timer> = [];
   private invincible = false;
   private lifeAffect: Phaser.GameObjects.Sprite;
@@ -52,6 +54,10 @@ export default class BattleScene extends Phaser.Scene {
     this.load.spritesheet('hornet-attacking',
       'assets/hornet-attacking.png',
       {frameWidth: 32, frameHeight: 32}
+    );
+    this.load.spritesheet('dragonfly',
+      'assets/dragonfly.png',
+      {frameWidth: 48, frameHeight: 32}
     );
     this.load.spritesheet('hand',
       'assets/swatter.png',
@@ -106,6 +112,15 @@ export default class BattleScene extends Phaser.Scene {
       repeat: -1,
     });
     this.anims.create({
+      key: 'dragonfly',
+      frames: this.anims.generateFrameNumbers('dragonfly', {
+        start: 0,
+        end: 2
+      }),
+      frameRate: 20,
+      repeat: -1,
+    });
+    this.anims.create({
       key: 'life-affect',
       frames: this.anims.generateFrameNumbers('life-affect', {
         start: 0,
@@ -155,6 +170,7 @@ export default class BattleScene extends Phaser.Scene {
 
     this.intervals.push(setInterval(() => this.createFly(), 100));
     this.intervals.push(setInterval(() => this.createHornet(), 100));
+    this.intervals.push(setInterval(() => this.createDragonfly(), 100));
     this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
     this.intervals.push(setInterval(() => this.sendWave(), 8000));
     this.intervals.push(setInterval(() => this.create1Up(), 18000));
@@ -201,10 +217,10 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
-  createProjectile(h: Hornet) {
+  createProjectile(h: Hornet, speed: number) {
     const p = new Projectile(this, this.projectiles, h.x, h.y + (h.height / 2));
     const angleDeg = (Math.atan2(this.swatter.y - p.y , this.swatter.x - p.x) * 180 / Math.PI);
-    const velocity = this.physics.velocityFromAngle(angleDeg, 200);
+    const velocity = this.physics.velocityFromAngle(angleDeg, speed);
     p.setVelocity(velocity.x, velocity.y);
   }
 
@@ -346,7 +362,7 @@ export default class BattleScene extends Phaser.Scene {
 
   private createFly() {
     this.flyCreateCounter++;
-    if (this.flyCreateCounter < 30 || this.gameTimer > 10 && this.flyCreateCounter < 15) {
+    if (this.flyCreateCounter < 150) {
       return;
     }
     this.flyCreateCounter = 0;
@@ -364,6 +380,24 @@ export default class BattleScene extends Phaser.Scene {
     const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
     const hornet = new Hornet(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
     hornet.changeVelocity();
+  }
+
+  private createDragonfly() {
+    this.dragonflyCreateCounter++;
+    if (this.gameTimer < 1 || this.dragonflyCreateCounter < 50) {
+      return;
+    }
+    this.dragonflyCreateCounter = 0;
+    const left = Phaser.Math.Between(0, 1);
+    const dragonfly = new Dragonfly(this, this.swattables, left ? 0 : width, 50);
+    dragonfly.changeVelocity();
+    const destroyInterval = setInterval(() => {
+      if (dragonfly.x > 800) {
+        dragonfly.disableBody(true, true);
+        this.swattables.remove(dragonfly);
+        clearInterval(destroyInterval);
+      }
+    }, 100);
   }
 
   private updateGameTimer() {
