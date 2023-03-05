@@ -129,7 +129,7 @@ export default class BattleScene extends Phaser.Scene {
         start: 0,
         end: 2,
       }),
-      frameRate: 20,
+      frameRate: 4,
       repeat: -1,
     });
 
