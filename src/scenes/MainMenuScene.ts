@@ -11,6 +11,7 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   preload() {
+    this.loadFont('pe', '/assets/pixelemulator.ttf');
     this.load.image('glass-panel', 'assets/glassPanel.png');
     this.load.spritesheet('hand',
       'assets/swatter.png',
@@ -20,6 +21,19 @@ export default class MainMenuScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
+
+    const logoStyle = {
+      fontSize: '64px',
+      fill: '#fff',
+      fontFamily: "pe",
+    };
+    const subtitleStyle = {
+      fontSize: '32px',
+      fill: '#fff',
+      fontFamily: 'pe',
+    };
+    const logoText = this.add.text(width / 2, 100, 'DEBUG', logoStyle).setOrigin(0.5);
+    const subtitle = this.add.text(width / 2, 164, 'The Game', subtitleStyle).setOrigin(0.5);
 
     // Play button
     const playButton = new Button(this, width / 2, height / 2, 'glass-panel')
@@ -81,6 +95,15 @@ export default class MainMenuScene extends Phaser.Scene {
     this.input.on('pointerup', this.swat.bind(this));
     this.input.setDefaultCursor('none');
     this.swatter = new Swatter(this);
+  }
+
+  private loadFont(name: string, url: string) {
+    const newFont = new FontFace(name, `url(${url})`);
+    newFont.load().then(function (loaded) {
+      document.fonts.add(loaded);
+    }).catch(function (error) {
+      return error;
+    });
   }
 
   private swat() {
