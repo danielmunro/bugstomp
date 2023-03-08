@@ -2,12 +2,14 @@ import BattleScene from "../../scenes/BattleScene";
 import SwattableObject from "../../interfaces/SwattableObject";
 import Swatter from "../Swatter";
 import ExplosionAffect from "../affects/ExplosionAffect";
+import {height} from "../../config";
 
 export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implements SwattableObject {
   protected readonly textureKey: string;
   private readonly moveTimeout: number;
   private readonly attackTimeout: number;
   public readonly score: number;
+  protected alive = true;
 
   protected constructor(
     scene: BattleScene,
@@ -51,7 +53,17 @@ export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implement
   }
 
   swat() {
+    this.alive = false;
     this.emit('swat');
-    this.disableBody(true, true);
+    this.setGravityY(1000);
+    this.setBounceY(0);
+    this.setVelocityX(0);
+    this.setCollideWorldBounds(false);
+    const removeInt = setInterval(() => {
+      if (this.y > height) {
+        this.disableBody(true, true);
+      }
+      clearInterval(removeInt);
+    }, 100);
   }
 }
