@@ -253,6 +253,10 @@ export default class BattleScene extends Phaser.Scene {
       if (swattable instanceof Bomb) {
         return;
       }
+      if (swattable instanceof Life || swattable instanceof SuperSize) {
+        swattable.disableBody(true, true);
+        return;
+      }
       const sw = swattable as SwattableObject;
       const explosion = new ExplosionAffect(this, sw.x, sw.y);
       explosion.anims.play('explosion-affect')
