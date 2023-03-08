@@ -27,13 +27,7 @@ export default class MainMenuScene extends Phaser.Scene {
       fill: '#fff',
       fontFamily: "pe",
     };
-    const subtitleStyle = {
-      fontSize: '32px',
-      fill: '#fff',
-      fontFamily: 'pe',
-    };
-    this.add.text(width / 2, 100, 'DEBUG:', logoStyle).setOrigin(0.5);
-    this.add.text(width / 2, 164, 'The Game', subtitleStyle).setOrigin(0.5);
+    this.add.text(width / 2, 100, 'Bug Smash', logoStyle).setOrigin(0.5);
 
     // Play button
     const playButton = new Button(this, width / 2, height / 2, 'glass-panel')

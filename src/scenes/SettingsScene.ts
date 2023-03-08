@@ -91,11 +91,11 @@ export default class SettingsScene extends Phaser.Scene {
     };
     let caratX = 0;
     if (Settings.chosenDifficulty === 'easy') {
-      caratX = this.easyButton.x - 10;
+      caratX = this.easyButton.x - this.easyButton.width / 2;
     } else if (Settings.chosenDifficulty === 'normal') {
-      caratX = this.normalButton.x - 10;
+      caratX = this.normalButton.x - this.normalButton.width / 2;
     } else if (Settings.chosenDifficulty === 'hard') {
-      caratX = this.hardButton.x - 10;
+      caratX = this.hardButton.x - this.hardButton.width / 2;
     }
     this.caratText = this.add.text(caratX, 128, '^', caratStyle);
   }
