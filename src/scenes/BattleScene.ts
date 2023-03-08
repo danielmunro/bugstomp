@@ -173,9 +173,10 @@ export default class BattleScene extends Phaser.Scene {
     this.intervals.push(setInterval(() => this.createDragonfly(), 100));
     this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
     this.intervals.push(setInterval(() => this.sendWave(), 8000));
+    this.intervals.push(setInterval(() => this.sendMegaWave(), 12000));
     this.intervals.push(setInterval(() => this.create1Up(), 18000));
     this.intervals.push(setInterval(() => this.createPowerUp(), 10000));
-    this.intervals.push(setInterval(() => this.createBomb(), 20000));
+    this.intervals.push(setInterval(() => this.createBomb(), 18000));
   }
 
   update() {
@@ -350,6 +351,12 @@ export default class BattleScene extends Phaser.Scene {
     }
   }
 
+  private sendMegaWave() {
+    for (let i = 0; i < 50; i++) {
+      setTimeout(() => this.createFly(true, ), Phaser.Math.Between(50, 2000));
+    }
+  }
+
   private swat() {
     this.swatter.playSwatAnim();
     this.swattables.children.iterate((swat: any) => {
@@ -360,12 +367,14 @@ export default class BattleScene extends Phaser.Scene {
     });
   }
 
-  private createFly() {
-    this.flyCreateCounter++;
-    if (this.flyCreateCounter < 150) {
-      return;
+  private createFly(ignoreCounter = false) {
+    if (!ignoreCounter) {
+      this.flyCreateCounter++;
+      if (this.flyCreateCounter < 30 || this.gameTimer > 10 && this.flyCreateCounter < 20) {
+        return;
+      }
+      this.flyCreateCounter = 0;
     }
-    this.flyCreateCounter = 0;
     const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
     const fly = new Fly(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
     fly.changeVelocity();
