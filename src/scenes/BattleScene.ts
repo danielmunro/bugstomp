@@ -28,6 +28,8 @@ export default class BattleScene extends Phaser.Scene {
   private intervals: Array<NodeJS.Timer> = [];
   private invincible = false;
   private lifeAffect: Phaser.GameObjects.Sprite;
+  private music: Array<Phaser.Sound.BaseSound> = [];
+  private musicIndex = 0;
 
   constructor() {
     super('battle');
@@ -75,6 +77,15 @@ export default class BattleScene extends Phaser.Scene {
       'assets/bomb-power-up.png',
       {frameWidth: 32, frameHeight: 32}
     );
+    this.load.audio('swat', 'assets/swat.mp3');
+    this.load.audio('got-hit', 'assets/got-hit.mp3');
+    this.load.audio('shooting', 'assets/shooting.mp3');
+    this.load.audio('falling-bomb', 'assets/falling-bomb.mp3');
+    this.load.audio('action-workout', 'assets/action-workout.mp3');
+    this.load.audio('euphoria', 'assets/euphoria.mp3');
+    this.load.audio('modern-summer', 'assets/modern-summer.mp3');
+    this.load.audio('rock-the-party', 'assets/rock-the-party.mp3');
+    this.load.audio('trap', 'assets/trap.mp3');
   }
 
   create(): void {
@@ -177,6 +188,12 @@ export default class BattleScene extends Phaser.Scene {
     this.intervals.push(setInterval(() => this.create1Up(), 18000));
     this.intervals.push(setInterval(() => this.createPowerUp(), 10000));
     this.intervals.push(setInterval(() => this.createBomb(), 18000));
+    this.music.push(this.sound.add('euphoria'));
+    this.music.push(this.sound.add('modern-summer'));
+    this.music.push(this.sound.add('action-workout'));
+    this.music.push(this.sound.add('rock-the-party'));
+    this.music.push(this.sound.add('trap'));
+    this.music[this.musicIndex].play();
   }
 
   update() {
@@ -204,6 +221,13 @@ export default class BattleScene extends Phaser.Scene {
         this.swattables.remove(swattable);
       }
     });
+    if (!this.music[this.musicIndex].isPlaying) {
+      this.musicIndex += 1;
+      if (this.musicIndex >= this.music.length) {
+        this.musicIndex = 0;
+      }
+      this.music[this.musicIndex].play();
+    }
   }
 
   getSwatter(): Swatter {
@@ -229,6 +253,7 @@ export default class BattleScene extends Phaser.Scene {
     if (this.invincible) {
       return;
     }
+    this.sound.play('got-hit');
     if (this.lives < 1) {
       this.physics.pause();
       this.gameOver = true;
@@ -363,6 +388,7 @@ export default class BattleScene extends Phaser.Scene {
 
   private swat() {
     this.swatter.playSwatAnim();
+    this.sound.play('swat');
     this.swattables.children.iterate((swat: any) => {
       const swattable = swat as SwattableObject;
       if (this.swatter.hoversOver(swattable)) {

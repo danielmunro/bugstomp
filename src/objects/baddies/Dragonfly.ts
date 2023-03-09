@@ -26,6 +26,7 @@ export default class Dragonfly extends Bug {
     if (this.active) {
       const scene = this.scene as BattleScene;
       let created = 0;
+      this.scene.sound.play('falling-bomb');
       const createAttackInt = setInterval(() => {
         if (created >= 3) {
           clearInterval(createAttackInt);

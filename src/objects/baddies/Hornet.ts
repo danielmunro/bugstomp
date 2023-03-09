@@ -18,6 +18,7 @@ export default class Hornet extends Bug {
             const scene = this.scene as BattleScene;
             this.setVelocity(0, 0);
             let created = 0;
+            this.scene.sound.play('shooting');
             const createAttackInt = setInterval(() => {
                 if (created >= 3) {
                     clearInterval(createAttackInt);
