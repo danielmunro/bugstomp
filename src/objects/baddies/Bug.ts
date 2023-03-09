@@ -59,6 +59,8 @@ export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implement
     this.setBounceY(0);
     this.setVelocityX(0);
     this.setCollideWorldBounds(false);
+    this.scene.sound.play('pop');
+    this.setActive(false);
     const removeInt = setInterval(() => {
       if (this.y > height) {
         this.disableBody(true, true);

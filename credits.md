@@ -8,6 +8,8 @@ Shooting sound effect from [Pixabay](https://pixabay.com/?utm_source=link-attrib
 
 Falling bomb sound effect from [Pixabay](https://pixabay.com/sound-effects/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=41038)
 
+Pop sound effect from [Pixabay](https://pixabay.com/sound-effects/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=85563)
+
 # Music
 
 Euphoria by [Playsound](https://pixabay.com/users/playsound-24686998/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=121294) from [Pixabay](https://pixabay.com//?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=121294)
