@@ -12,13 +12,13 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   preload() {
-    this.loadFont('pe', 'assets/pixelemulator.ttf');
+    this.loadFont('pe', './assets/pixelemulator.ttf');
     this.load.image('glass-panel', 'assets/glassPanel.png');
     this.load.spritesheet('hand',
       'assets/swatter.png',
       { frameWidth: 32, frameHeight: 48 }
     );
-    this.load.audio('action-workout', 'assets/action-workout.mp3');
+    this.load.audio('action-workout', './assets/action-workout.mp3');
   }
 
   create() {
@@ -68,6 +68,7 @@ export default class MainMenuScene extends Phaser.Scene {
     this.buttons.push(creditsButton);
 
     playButton.on('selected', () => {
+      this.introSong.stop();
       this.scene.start('battle');
     });
 
