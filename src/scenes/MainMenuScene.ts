@@ -12,7 +12,7 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   preload() {
-    this.loadFont('pe', '/assets/pixelemulator.ttf');
+    this.loadFont('pe', 'assets/pixelemulator.ttf');
     this.load.image('glass-panel', 'assets/glassPanel.png');
     this.load.spritesheet('hand',
       'assets/swatter.png',
