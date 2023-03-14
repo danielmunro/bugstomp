@@ -5,6 +5,7 @@ import SwattableObject from "../interfaces/SwattableObject"
 export default class MainMenuScene extends Phaser.Scene {
   private buttons: SwattableObject[] = [];
   private swatter: Swatter;
+  private introSong: Phaser.Sound.BaseSound;
 
   constructor() {
     super('main-menu');
@@ -17,10 +18,19 @@ export default class MainMenuScene extends Phaser.Scene {
       'assets/swatter.png',
       { frameWidth: 32, frameHeight: 48 }
     );
+    this.load.audio('action-workout', 'assets/action-workout.mp3');
   }
 
   create() {
     const { width, height } = this.scale;
+    if (!this.introSong) {
+      const songConfig = {
+        loop: true,
+      };
+      this.introSong = this.sound.add('action-workout', songConfig);
+      this.introSong.play();
+      console.log("playing intro song");
+    }
 
     const logoStyle = {
       fontSize: '64px',

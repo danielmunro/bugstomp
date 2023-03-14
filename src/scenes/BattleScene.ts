@@ -82,7 +82,6 @@ export default class BattleScene extends Phaser.Scene {
     this.load.audio('shooting', 'assets/shooting.mp3');
     this.load.audio('falling-bomb', 'assets/falling-bomb.mp3');
     this.load.audio('pop', 'assets/pop.mp3');
-    this.load.audio('action-workout', 'assets/action-workout.mp3');
     this.load.audio('euphoria', 'assets/euphoria.mp3');
     this.load.audio('modern-summer', 'assets/modern-summer.mp3');
     this.load.audio('rock-the-party', 'assets/rock-the-party.mp3');
