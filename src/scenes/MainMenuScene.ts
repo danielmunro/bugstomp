@@ -29,7 +29,6 @@ export default class MainMenuScene extends Phaser.Scene {
       };
       this.introSong = this.sound.add('action-workout', songConfig);
       this.introSong.play();
-      console.log("playing intro song");
     }
 
     const logoStyle = {
