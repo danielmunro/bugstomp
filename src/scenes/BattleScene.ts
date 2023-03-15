@@ -36,7 +36,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.image('sky', 'assets/sky.png');
+    this.load.image('bg', 'assets/bg-clouds.jpg');
     this.load.image('star', 'assets/star.png');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
@@ -89,7 +89,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.add.image(width / 2, height / 2, 'sky');
+    this.add.image(width / 2, height / 2, 'bg');
     this.swattables = this.physics.add.group();
     this.projectiles = this.physics.add.group();
     this.anims.create({

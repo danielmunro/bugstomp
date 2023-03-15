@@ -23,8 +23,9 @@
   },
   "main": "entry.ts",
   "scripts": {
-    "dev": "webpack --mode development && webpack serve --mode development",
-    "start": "electron-forge start",
+    "dev": "webpack --mode development",
+    "prod": "webpack --mode production",
+    "start": "yarn dev && electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
