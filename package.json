@@ -23,6 +23,7 @@
   },
   "main": "entry.ts",
   "scripts": {
+    "dev-serve": "yarn dev && webpack serve --mode development",
     "dev": "webpack --mode development",
     "prod": "webpack --mode production",
     "start": "yarn dev && electron-forge start",
