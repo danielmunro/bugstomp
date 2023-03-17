@@ -180,8 +180,14 @@ export default class BattleScene extends Phaser.Scene {
     this.createFly();
 
     this.intervals.push(setInterval(() => this.createFly(), 100));
-    this.intervals.push(setInterval(() => this.createHornet(), 100));
-    this.intervals.push(setInterval(() => this.createDragonfly(), 100));
+    setTimeout(
+      () => this.intervals.push(setInterval(() => this.createHornet(), 100)),
+      10000,
+    );
+    setTimeout(
+      () => this.intervals.push(setInterval(() => this.createDragonfly(), 100)),
+      12000,
+    );
     this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
     this.intervals.push(setInterval(() => this.sendWave(), 8000));
     this.intervals.push(setInterval(() => this.sendMegaWave(), 12000));
@@ -412,7 +418,7 @@ export default class BattleScene extends Phaser.Scene {
 
   private createHornet() {
     this.hornetCreateCounter++;
-    if (this.gameTimer < 10 || this.gameTimer < 27 && this.hornetCreateCounter < 30 || this.hornetCreateCounter < 20) {
+    if (this.gameTimer < 27 && this.hornetCreateCounter < 30 || this.hornetCreateCounter < 20) {
       return;
     }
     this.hornetCreateCounter = 0;
@@ -423,7 +429,7 @@ export default class BattleScene extends Phaser.Scene {
 
   private createDragonfly() {
     this.dragonflyCreateCounter++;
-    if (this.gameTimer < 10 || this.dragonflyCreateCounter < 100) {
+    if (this.dragonflyCreateCounter < 60) {
       return;
     }
     this.dragonflyCreateCounter = 0;
