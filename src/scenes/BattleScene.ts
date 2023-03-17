@@ -10,6 +10,7 @@ import ExplosionAffect from "../objects/affects/ExplosionAffect";
 import Projectile from "../objects/baddies/Projectile";
 import Bomb from "../objects/powerups/Bomb";
 import Dragonfly from "../objects/baddies/Dragonfly";
+import Button from "../objects/ui/Button";
 
 export default class BattleScene extends Phaser.Scene {
   private score = 0;
@@ -30,6 +31,7 @@ export default class BattleScene extends Phaser.Scene {
   private lifeAffect: Phaser.GameObjects.Sprite;
   private music: Array<Phaser.Sound.BaseSound> = [];
   private musicIndex = 0;
+  private startOverButton: Button;
 
   constructor() {
     super('battle');
@@ -86,6 +88,8 @@ export default class BattleScene extends Phaser.Scene {
     this.load.audio('modern-summer', 'assets/modern-summer.mp3');
     this.load.audio('rock-the-party', 'assets/rock-the-party.mp3');
     this.load.audio('trap', 'assets/trap.mp3');
+    this.load.audio('game-over', 'assets/game-over.mp3');
+    this.load.image('glass-panel', 'assets/glassPanel.png');
   }
 
   create(): void {
@@ -203,18 +207,13 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   update() {
-    if (this.gameOver) {
-      this.intervals.forEach((interval) => clearInterval(interval));
-      this.swattables.children.iterate((bug) => {
-        bug.setActive(false);
-      });
-      this.input.setDefaultCursor('auto');
-      return;
-    }
     const pointer = this.input.activePointer;
     this.swatter.setPosition(pointer.x, pointer.y + 16);
     if (this.lifeAffect) {
       this.lifeAffect.setPosition(pointer.x, pointer.y + 16);
+    }
+    if (this.gameOver) {
+      return;
     }
     this.projectiles.children.each((projectile) => {
       const p = projectile as Projectile;
@@ -256,13 +255,13 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   gotHit() {
-    if (this.invincible) {
+    if (this.invincible || this.gameOver) {
       return;
     }
     this.sound.play('got-hit');
     if (this.lives < 1) {
       this.physics.pause();
-      this.gameOver = true;
+      this.doGameOver();
       return;
     }
     this.lives -= 1;
@@ -322,6 +321,28 @@ export default class BattleScene extends Phaser.Scene {
   addScore(score: number) {
     this.score += score;
     this.scoreText.setText(`score: ${this.score}`);
+  }
+
+  private doGameOver() {
+    this.gameOver = true;
+    this.music[this.musicIndex].stop();
+    this.sound.play('game-over');
+    this.intervals.forEach((interval) => clearInterval(interval));
+    this.swattables.children.iterate((bug) => {
+      bug.setActive(false);
+    });
+    this.startOverButton = new Button(this, width / 2, height - 40, 'glass-panel')
+      .setDisplaySize(150, 50);
+    this.add.existing(this.startOverButton);
+    this.add.text(this.startOverButton.x, this.startOverButton.y, 'Start Over')
+      .setOrigin(0.5);
+    this.startOverButton.on('selected', () => {
+      console.log("clicked");
+      this.scene.start('battle');
+    });
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.startOverButton.off('selected');
+    });
   }
 
   private createBomb() {
@@ -395,6 +416,12 @@ export default class BattleScene extends Phaser.Scene {
   private swat() {
     this.swatter.playSwatAnim();
     this.sound.play('swat');
+    if (this.swatter.hoversOver(this.startOverButton)) {
+      this.startOverButton.swat();
+    }
+    if (this.gameOver) {
+      return;
+    }
     this.swattables.children.iterate((swat: any) => {
       const swattable = swat as SwattableObject;
       if (this.swatter.hoversOver(swattable)) {

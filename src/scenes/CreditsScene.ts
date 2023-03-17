@@ -84,6 +84,10 @@ export default class CreditsScene extends Phaser.Scene {
       'Pop            ... Pixabay',
       'https://pixabay.com/sound-effects/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=85563',
     );
+    link(
+      'Game over      ... Lightyeartraxx',
+      'https://pixabay.com/users/lightyeartraxx-26697863/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=142453',
+    );
     this.add.text(16, calcLineY(true), 'Music', titleStyle);
     link(
       'Euphoria       ... Playsound',
