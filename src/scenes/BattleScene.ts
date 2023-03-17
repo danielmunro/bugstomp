@@ -12,15 +12,18 @@ import Bomb from "../objects/powerups/Bomb";
 import Dragonfly from "../objects/baddies/Dragonfly";
 import Button from "../objects/ui/Button";
 
+const startLives = 3;
+
 export default class BattleScene extends Phaser.Scene {
   private score = 0;
+  private highScoreText: Phaser.GameObjects.Text;
   private scoreText: Phaser.GameObjects.Text;
   private livesText: Phaser.GameObjects.Text;
   private timerLabel: Phaser.GameObjects.Text;
   private swatter: Swatter;
   private swattables: Phaser.GameObjects.Group;
   private projectiles: Phaser.GameObjects.Group;
-  private lives = 3;
+  private lives = startLives;
   private gameOver = false;
   private gameTimer = 0;
   private flyCreateCounter = 0;
@@ -32,6 +35,7 @@ export default class BattleScene extends Phaser.Scene {
   private music: Array<Phaser.Sound.BaseSound> = [];
   private musicIndex = 0;
   private startOverButton: Button;
+  private static maxScoreThisSession = 0;
 
   constructor() {
     super('battle');
@@ -93,6 +97,8 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create(): void {
+    this.score = 0;
+    this.gameTimer = 0;
     this.add.image(width / 2, height / 2, 'bg');
     this.swattables = this.physics.add.group();
     this.projectiles = this.physics.add.group();
@@ -166,6 +172,10 @@ export default class BattleScene extends Phaser.Scene {
     const fontStyle = {fontSize: '32px', fill: '#000'};
     this.scoreText = this.add.text(16, 16, 'score: 0', fontStyle);
     this.livesText = this.add.text(16, 48, `lives: ${this.lives}`, fontStyle);
+    this.highScoreText = this.add.text(16, 80, '', fontStyle);
+    if (BattleScene.maxScoreThisSession > 0) {
+      this.highScoreText.setText('high score: ' + BattleScene.maxScoreThisSession);
+    }
     this.timerLabel = this.add.text((width / 2) - 16, 16, this.gameTimer.toString(), fontStyle);
 
     this.swatter = new Swatter(this);
@@ -325,6 +335,9 @@ export default class BattleScene extends Phaser.Scene {
 
   private doGameOver() {
     this.gameOver = true;
+    if (this.score > BattleScene.maxScoreThisSession) {
+      BattleScene.maxScoreThisSession = this.score;
+    }
     this.music[this.musicIndex].stop();
     this.sound.play('game-over');
     this.intervals.forEach((interval) => clearInterval(interval));
@@ -337,8 +350,9 @@ export default class BattleScene extends Phaser.Scene {
     this.add.text(this.startOverButton.x, this.startOverButton.y, 'Start Over')
       .setOrigin(0.5);
     this.startOverButton.on('selected', () => {
-      console.log("clicked");
       this.scene.start('battle');
+      this.lives = startLives;
+      this.gameOver = false;
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       this.startOverButton.off('selected');
@@ -416,7 +430,7 @@ export default class BattleScene extends Phaser.Scene {
   private swat() {
     this.swatter.playSwatAnim();
     this.sound.play('swat');
-    if (this.swatter.hoversOver(this.startOverButton)) {
+    if (this.startOverButton && this.swatter.hoversOver(this.startOverButton)) {
       this.startOverButton.swat();
     }
     if (this.gameOver) {
