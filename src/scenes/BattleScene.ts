@@ -13,8 +13,7 @@ import Dragonfly from "../objects/baddies/Dragonfly";
 import Button from "../objects/ui/Button";
 import { swatter, ui } from "../preloaders";
 import LoaderAwareScene from "./LoaderAwareScene";
-
-const startLives = 3;
+import {getSettings} from "../userConfig";
 
 export default class BattleScene extends LoaderAwareScene {
   private score = 0;
@@ -25,7 +24,7 @@ export default class BattleScene extends LoaderAwareScene {
   private swatter: Swatter;
   private swattables: Phaser.GameObjects.Group;
   private projectiles: Phaser.GameObjects.Group;
-  private lives = startLives;
+  private lives = getSettings().startLives;
   private gameOver = false;
   private gameTimer = 0;
   private flyCreateCounter = 0;
@@ -343,7 +342,7 @@ export default class BattleScene extends LoaderAwareScene {
       .setOrigin(0.5);
     this.startOverButton.on('selected', () => {
       this.scene.start('battle');
-      this.lives = startLives;
+      this.lives = getSettings().startLives;
       this.gameOver = false;
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {

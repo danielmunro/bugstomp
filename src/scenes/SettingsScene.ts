@@ -1,9 +1,9 @@
 import Button from "../objects/ui/Button"
 import Swatter from "../objects/Swatter"
-import Settings from "../Settings";
 import SwattableObject from "../interfaces/SwattableObject";
 import { swatter, ui } from "../preloaders";
 import LoaderAwareScene from "./LoaderAwareScene";
+import {chosenDifficulty, setDifficulty} from "../userConfig";
 
 export default class SettingsScene extends LoaderAwareScene {
   private swatter: Swatter;
@@ -49,7 +49,7 @@ export default class SettingsScene extends LoaderAwareScene {
     this.add.text(this.easyButton.x, this.easyButton.y, 'easy')
       .setOrigin(0.5);
     this.easyButton.on('selected', () => {
-      Settings.chosenDifficulty = 'easy';
+      setDifficulty('easy');
     });
     this.buttons.push(this.easyButton);
     this.normalButton = new Button(this, 500, 64, 'glass-panel')
@@ -58,7 +58,7 @@ export default class SettingsScene extends LoaderAwareScene {
     this.add.text(this.normalButton.x, this.normalButton.y, 'normal')
       .setOrigin(0.5);
     this.normalButton.on('selected', () => {
-      Settings.chosenDifficulty = 'normal';
+      setDifficulty('normal');
     });
     this.buttons.push(this.normalButton);
     this.hardButton = new Button(this, 600, 64, 'glass-panel')
@@ -67,7 +67,7 @@ export default class SettingsScene extends LoaderAwareScene {
     this.add.text(this.hardButton.x, this.hardButton.y, 'hard')
       .setOrigin(0.5);
     this.hardButton.on('selected', () => {
-      Settings.chosenDifficulty = 'hard';
+      setDifficulty('hard');
     });
     this.buttons.push(this.hardButton);
     this.anims.create({
@@ -84,11 +84,11 @@ export default class SettingsScene extends LoaderAwareScene {
       fontSize: '24pt',
     };
     let caratX = 0;
-    if (Settings.chosenDifficulty === 'easy') {
+    if (chosenDifficulty === 'easy') {
       caratX = this.easyButton.x - this.easyButton.width / 2;
-    } else if (Settings.chosenDifficulty === 'normal') {
+    } else if (chosenDifficulty === 'normal') {
       caratX = this.normalButton.x - this.normalButton.width / 2;
-    } else if (Settings.chosenDifficulty === 'hard') {
+    } else if (chosenDifficulty === 'hard') {
       caratX = this.hardButton.x - this.hardButton.width / 2;
     }
     this.caratText = this.add.text(caratX, 128, '^', caratStyle);
@@ -108,11 +108,11 @@ export default class SettingsScene extends LoaderAwareScene {
   }
 
   private getCaratX() {
-    if (Settings.chosenDifficulty === 'easy') {
+    if (chosenDifficulty === 'easy') {
       return this.easyButton.x - 10;
-    } else if (Settings.chosenDifficulty === 'normal') {
+    } else if (chosenDifficulty === 'normal') {
       return this.normalButton.x - 10;
-    } else if (Settings.chosenDifficulty === 'hard') {
+    } else if (chosenDifficulty === 'hard') {
       return this.hardButton.x - 10;
     }
   }
