@@ -35,8 +35,9 @@ export default class BattleScene extends LoaderAwareScene {
   private lifeAffect: Phaser.GameObjects.Sprite;
   private music: Array<Phaser.Sound.BaseSound> = [];
   private musicIndex = 0;
-  private startOverButton: Button;
+  private buttons: Array<Button> = [];
   private static maxScoreThisSession = 0;
+  private background: Phaser.GameObjects.Image;
 
   constructor() {
     super('battle');
@@ -96,7 +97,7 @@ export default class BattleScene extends LoaderAwareScene {
     this.callLoaders();
     this.score = 0;
     this.gameTimer = 0;
-    this.add.image(width / 2, height / 2, 'bg');
+    this.background = this.add.image(width / 2, height / 2, 'bg');
     this.swattables = this.physics.add.group();
     this.projectiles = this.physics.add.group();
     this.anims.create({
@@ -329,25 +330,50 @@ export default class BattleScene extends LoaderAwareScene {
     if (this.score > BattleScene.maxScoreThisSession) {
       BattleScene.maxScoreThisSession = this.score;
     }
+    this.tweens.add({
+      targets: this.background,
+      duration: 1000,
+      alpha: 0.1,
+    });
     this.music[this.musicIndex].stop();
     this.sound.play('game-over');
     this.intervals.forEach((interval) => clearInterval(interval));
     this.swattables.children.iterate((bug) => {
       bug.setActive(false);
+      this.tweens.add({
+        targets: bug,
+        duration: 1000,
+        alpha: 0.1,
+      });
     });
-    this.startOverButton = new Button(this, width / 2, height - 40, 'glass-panel')
+    const startOverButton = new Button(this, width / 2, height - 100, 'glass-panel')
       .setDisplaySize(150, 50);
-    this.add.existing(this.startOverButton);
-    this.add.text(this.startOverButton.x, this.startOverButton.y, 'Start Over')
+    this.add.existing(startOverButton);
+    this.add.text(startOverButton.x, startOverButton.y, 'Restart')
       .setOrigin(0.5);
-    this.startOverButton.on('selected', () => {
+    startOverButton.on('selected', () => {
       this.scene.start('battle');
       this.lives = getSettings().startLives;
       this.gameOver = false;
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
-      this.startOverButton.off('selected');
+      startOverButton.off('selected');
     });
+
+    const mainMenuButton = new Button(this, width / 2, height - 40, 'glass-panel')
+      .setDisplaySize(150, 50);
+    this.add.existing(mainMenuButton);
+    this.add.text(mainMenuButton.x, mainMenuButton.y, 'Main Menu')
+      .setOrigin(0.5);
+    mainMenuButton.on('selected', () => {
+      this.scene.start('main-menu');
+      this.lives = getSettings().startLives;
+      this.gameOver = false;
+    });
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      mainMenuButton.off('selected');
+    });
+    this.buttons.push(startOverButton, mainMenuButton);
   }
 
   private createBomb() {
@@ -420,9 +446,11 @@ export default class BattleScene extends LoaderAwareScene {
 
   private swat() {
     this.swatter.playSwatAnim();
-    if (this.startOverButton && this.swatter.hoversOver(this.startOverButton)) {
-      this.startOverButton.swat();
-    }
+    this.buttons.forEach((button) => {
+      if (this.swatter.hoversOver(button)) {
+        button.swat();
+      }
+    });
     if (this.gameOver) {
       return;
     }
