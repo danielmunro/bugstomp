@@ -37,14 +37,14 @@ export default class BattleScene extends Phaser.Scene {
   private musicIndex = 0;
   private startOverButton: Button;
   private static maxScoreThisSession = 0;
-  private animLoaders: Array<() => void> = [];
+  private loaders: Array<() => void> = [];
 
   constructor() {
     super('battle');
   }
 
   preload(): void {
-    this.animLoaders.push(swatter(this));
+    this.loaders.push(swatter(this));
     this.load.image('bg', 'assets/bg-clouds.jpg');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
@@ -94,7 +94,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.animLoaders.forEach((loader) => loader());
+    this.loaders.forEach((loader) => loader());
     this.score = 0;
     this.gameTimer = 0;
     this.add.image(width / 2, height / 2, 'bg');
@@ -421,7 +421,6 @@ export default class BattleScene extends Phaser.Scene {
 
   private swat() {
     this.swatter.playSwatAnim();
-    this.sound.play('swat');
     if (this.startOverButton && this.swatter.hoversOver(this.startOverButton)) {
       this.startOverButton.swat();
     }

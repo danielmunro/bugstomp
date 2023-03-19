@@ -13,6 +13,7 @@ export default class Swatter extends Phaser.Physics.Arcade.Sprite {
 
     playSwatAnim() {
         this.anims.play('swatting', true);
+        this.scene.sound.play('swat');
     }
 
     hoversOver(sprite: SwattableObject) {
