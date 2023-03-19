@@ -2,7 +2,7 @@ import Button from "../objects/ui/Button"
 import Swatter from "../objects/Swatter"
 import Settings from "../Settings";
 import SwattableObject from "../interfaces/SwattableObject";
-import { swatter } from "../preloaders";
+import { swatter, ui } from "../preloaders";
 import LoaderAwareScene from "./LoaderAwareScene";
 
 export default class SettingsScene extends LoaderAwareScene {
@@ -19,7 +19,7 @@ export default class SettingsScene extends LoaderAwareScene {
 
   preload() {
     this.addLoader(swatter(this));
-    this.load.image('glass-panel', 'assets/glassPanel.png');
+    this.addLoader(ui(this));
   }
 
   create() {

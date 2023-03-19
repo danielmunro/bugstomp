@@ -11,7 +11,7 @@ import Projectile from "../objects/baddies/Projectile";
 import Bomb from "../objects/powerups/Bomb";
 import Dragonfly from "../objects/baddies/Dragonfly";
 import Button from "../objects/ui/Button";
-import { swatter } from "../preloaders";
+import { swatter, ui } from "../preloaders";
 import LoaderAwareScene from "./LoaderAwareScene";
 
 const startLives = 3;
@@ -45,6 +45,7 @@ export default class BattleScene extends LoaderAwareScene {
 
   preload(): void {
     this.addLoader(swatter(this));
+    this.addLoader(ui(this));
     this.load.image('bg', 'assets/bg-clouds.jpg');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
@@ -90,7 +91,6 @@ export default class BattleScene extends LoaderAwareScene {
     this.load.audio('rock-the-party', 'assets/rock-the-party.mp3');
     this.load.audio('trap', 'assets/trap.mp3');
     this.load.audio('game-over', 'assets/game-over.mp3');
-    this.load.image('glass-panel', 'assets/glassPanel.png');
   }
 
   create(): void {

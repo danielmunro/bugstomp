@@ -1,7 +1,7 @@
 import Swatter from "../objects/Swatter"
 import Button from "../objects/ui/Button"
 import SwattableObject from "../interfaces/SwattableObject"
-import { swatter } from "../preloaders";
+import { swatter, ui } from "../preloaders";
 import LoaderAwareScene from "./LoaderAwareScene";
 
 export default class MainMenuScene extends LoaderAwareScene {
@@ -15,8 +15,8 @@ export default class MainMenuScene extends LoaderAwareScene {
 
   preload() {
     this.addLoader(swatter(this));
+    this.addLoader(ui(this));
     this.loadFont('pe', './assets/pixelemulator.ttf');
-    this.load.image('glass-panel', 'assets/glassPanel.png');
     this.load.audio('action-workout', './assets/action-workout.mp3');
   }
 

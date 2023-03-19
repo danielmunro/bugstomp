@@ -1,6 +1,6 @@
 import Button from "../objects/ui/Button"
 import Swatter from "../objects/Swatter"
-import { swatter } from "../preloaders";
+import { swatter, ui } from "../preloaders";
 import LoaderAwareScene from "./LoaderAwareScene";
 
 export default class CreditsScene extends LoaderAwareScene {
@@ -12,8 +12,8 @@ export default class CreditsScene extends LoaderAwareScene {
   }
 
   preload() {
-    this.load.image('glass-panel', 'assets/glassPanel.png');
     this.addLoader(swatter(this));
+    this.addLoader(ui(this));
   }
 
   create() {
