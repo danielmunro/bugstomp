@@ -12,10 +12,11 @@ import Bomb from "../objects/powerups/Bomb";
 import Dragonfly from "../objects/baddies/Dragonfly";
 import Button from "../objects/ui/Button";
 import { swatter } from "../preloaders";
+import LoaderAwareScene from "./LoaderAwareScene";
 
 const startLives = 3;
 
-export default class BattleScene extends Phaser.Scene {
+export default class BattleScene extends LoaderAwareScene {
   private score = 0;
   private highScoreText: Phaser.GameObjects.Text;
   private scoreText: Phaser.GameObjects.Text;
@@ -37,14 +38,13 @@ export default class BattleScene extends Phaser.Scene {
   private musicIndex = 0;
   private startOverButton: Button;
   private static maxScoreThisSession = 0;
-  private loaders: Array<() => void> = [];
 
   constructor() {
     super('battle');
   }
 
   preload(): void {
-    this.loaders.push(swatter(this));
+    this.addLoader(swatter(this));
     this.load.image('bg', 'assets/bg-clouds.jpg');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
@@ -94,7 +94,7 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   create(): void {
-    this.loaders.forEach((loader) => loader());
+    this.callLoaders();
     this.score = 0;
     this.gameTimer = 0;
     this.add.image(width / 2, height / 2, 'bg');
