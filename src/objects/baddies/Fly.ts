@@ -3,6 +3,7 @@ import Bug from './Bug';
 import Swatter from "../Swatter";
 import ExplosionAffect from "../affects/ExplosionAffect";
 import {height} from "../../config";
+import {getSettings} from "../../userConfig";
 
 export default class Fly extends Bug {
   constructor(scene: BattleScene, group: Phaser.GameObjects.Group, x: number, y: number) {
@@ -12,7 +13,7 @@ export default class Fly extends Bug {
   changeVelocity() {
     if (this.active && this.alive) {
       const towardRandomizer = Phaser.Math.Between(0, 2);
-      const speed = Phaser.Math.Between(40, 100);
+      const speed = Phaser.Math.Between(40, getSettings().flyMaxVelocity);
       const scene = this.scene as BattleScene;
       const swatter = scene.getSwatter();
       this.setVelocity(

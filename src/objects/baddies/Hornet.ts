@@ -1,5 +1,6 @@
 import BattleScene from '../../scenes/BattleScene';
 import Bug from './Bug';
+import {getSettings} from "../../userConfig";
 
 export default class Hornet extends Bug {
     constructor(scene: BattleScene, group: Phaser.GameObjects.Group, x: number, y: number) {
@@ -8,7 +9,9 @@ export default class Hornet extends Bug {
 
     changeVelocity() {
         if (this.active) {
-            this.setVelocity(Phaser.Math.Between(-150, 150), Phaser.Math.Between(-150, 150));
+            const maxVelocity = getSettings().hornetMaxVelocity;
+            const velocity = () => Phaser.Math.Between(-maxVelocity, maxVelocity);
+            this.setVelocity(velocity(), velocity());
             setTimeout(() => this.changeVelocity(), Phaser.Math.Between(1000, 4000));
         }
     }

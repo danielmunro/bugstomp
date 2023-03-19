@@ -483,7 +483,8 @@ export default class BattleScene extends LoaderAwareScene {
 
   private sendFlyWave() {
     const side = Phaser.Math.Between(0, 4);
-    const velocity = side < 2 ? -150 : 150;
+    const settings = getSettings();
+    const velocity = side < 2 ? -settings.flyMaxVelocity : settings.flyMaxVelocity;
     const coords = BattleScene.getCoords(side);
     coords.forEach((coord) => {
       const bug = new Fly(this, this.swattables, coord[0], coord[1]);
@@ -498,7 +499,8 @@ export default class BattleScene extends LoaderAwareScene {
 
   private sendHornetWave() {
     const side = Phaser.Math.Between(0, 4);
-    const velocity = side < 2 ? -150 : 150;
+    const settings = getSettings();
+    const velocity = side < 2 ? -settings.hornetMaxVelocity : settings.hornetMaxVelocity;
     const coords = BattleScene.getCoords(side);
     coords.forEach((coord) => {
       const bug = new Hornet(this, this.swattables, coord[0], coord[1]);
