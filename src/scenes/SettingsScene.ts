@@ -3,8 +3,9 @@ import Swatter from "../objects/Swatter"
 import Settings from "../Settings";
 import SwattableObject from "../interfaces/SwattableObject";
 import { swatter } from "../preloaders";
+import LoaderAwareScene from "./LoaderAwareScene";
 
-export default class SettingsScene extends Phaser.Scene {
+export default class SettingsScene extends LoaderAwareScene {
   private swatter: Swatter;
   private buttons: Array<Phaser.GameObjects.Image> = [];
   private easyButton: Phaser.GameObjects.Image;
@@ -17,16 +18,13 @@ export default class SettingsScene extends Phaser.Scene {
   }
 
   preload() {
+    this.addLoader(swatter(this));
     this.load.image('glass-panel', 'assets/glassPanel.png');
-    this.load.spritesheet('hand',
-      'assets/swatter.png',
-      { frameWidth: 32, frameHeight: 48 }
-    );
   }
 
   create() {
     const {width, height} = this.scale;
-    swatter(this);
+    this.callLoaders();
 
     // back button
     const backButton = new Button(this, width / 2, height / 2, 'glass-panel')

@@ -1,8 +1,9 @@
 import Button from "../objects/ui/Button"
 import Swatter from "../objects/Swatter"
 import { swatter } from "../preloaders";
+import LoaderAwareScene from "./LoaderAwareScene";
 
-export default class CreditsScene extends Phaser.Scene {
+export default class CreditsScene extends LoaderAwareScene {
   private swatter: Swatter;
   private backButton: Button;
 
@@ -12,11 +13,12 @@ export default class CreditsScene extends Phaser.Scene {
 
   preload() {
     this.load.image('glass-panel', 'assets/glassPanel.png');
-    swatter(this);
+    this.addLoader(swatter(this));
   }
 
   create() {
     const {width, height} = this.scale;
+    this.callLoaders();
     this.backButton = new Button(this, width / 2, height - 40, 'glass-panel')
       .setDisplaySize(150, 50);
     this.add.existing(this.backButton);
@@ -107,12 +109,6 @@ export default class CreditsScene extends Phaser.Scene {
       'Action Workout ... QubeSounds',
       'https://pixabay.com/users/qubesounds-24397640/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=99524',
     );
-
-    this.anims.create({
-      key: 'swatting',
-      frames: this.anims.generateFrameNumbers('hand', { start: 0, end: 2 }),
-      frameRate: 20,
-    });
 
     this.input.on('pointerup', this.swat.bind(this));
     this.input.setDefaultCursor('none');

@@ -2,8 +2,9 @@ import Swatter from "../objects/Swatter"
 import Button from "../objects/ui/Button"
 import SwattableObject from "../interfaces/SwattableObject"
 import { swatter } from "../preloaders";
+import LoaderAwareScene from "./LoaderAwareScene";
 
-export default class MainMenuScene extends Phaser.Scene {
+export default class MainMenuScene extends LoaderAwareScene {
   private buttons: SwattableObject[] = [];
   private swatter: Swatter;
   private introSong: Phaser.Sound.BaseSound;
@@ -13,7 +14,7 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   preload() {
-    swatter(this);
+    this.addLoader(swatter(this));
     this.loadFont('pe', './assets/pixelemulator.ttf');
     this.load.image('glass-panel', 'assets/glassPanel.png');
     this.load.audio('action-workout', './assets/action-workout.mp3');
@@ -21,6 +22,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
+    this.callLoaders();
     if (!this.introSong) {
       const songConfig = {
         loop: true,
@@ -82,13 +84,6 @@ export default class MainMenuScene extends Phaser.Scene {
       settingsButton.off('selected');
       creditsButton.off('selected');
     });
-
-    this.anims.create({
-      key: 'swatting',
-      frames: this.anims.generateFrameNumbers('hand', { start: 0, end: 2 }),
-      frameRate: 20,
-    });
-
     this.input.on('pointerup', this.swat.bind(this));
     this.input.setDefaultCursor('none');
     this.swatter = new Swatter(this);
