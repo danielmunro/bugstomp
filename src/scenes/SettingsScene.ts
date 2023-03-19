@@ -2,6 +2,7 @@ import Button from "../objects/ui/Button"
 import Swatter from "../objects/Swatter"
 import Settings from "../Settings";
 import SwattableObject from "../interfaces/SwattableObject";
+import { swatter } from "../preloaders";
 
 export default class SettingsScene extends Phaser.Scene {
   private swatter: Swatter;
@@ -25,6 +26,7 @@ export default class SettingsScene extends Phaser.Scene {
 
   create() {
     const {width, height} = this.scale;
+    swatter(this);
 
     // back button
     const backButton = new Button(this, width / 2, height / 2, 'glass-panel')
@@ -70,12 +72,6 @@ export default class SettingsScene extends Phaser.Scene {
       Settings.chosenDifficulty = 'hard';
     });
     this.buttons.push(this.hardButton);
-
-    this.load.spritesheet('hand',
-      'assets/swatter.png',
-      { frameWidth: 32, frameHeight: 48 }
-    );
-
     this.anims.create({
       key: 'swatting',
       frames: this.anims.generateFrameNumbers('hand', { start: 0, end: 2 }),

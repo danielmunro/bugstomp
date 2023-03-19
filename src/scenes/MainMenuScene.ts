@@ -1,6 +1,7 @@
 import Swatter from "../objects/Swatter"
 import Button from "../objects/ui/Button"
 import SwattableObject from "../interfaces/SwattableObject"
+import { swatter } from "../preloaders";
 
 export default class MainMenuScene extends Phaser.Scene {
   private buttons: SwattableObject[] = [];
@@ -12,12 +13,9 @@ export default class MainMenuScene extends Phaser.Scene {
   }
 
   preload() {
+    swatter(this);
     this.loadFont('pe', './assets/pixelemulator.ttf');
     this.load.image('glass-panel', 'assets/glassPanel.png');
-    this.load.spritesheet('hand',
-      'assets/swatter.png',
-      { frameWidth: 32, frameHeight: 48 }
-    );
     this.load.audio('action-workout', './assets/action-workout.mp3');
   }
 
@@ -84,11 +82,6 @@ export default class MainMenuScene extends Phaser.Scene {
       settingsButton.off('selected');
       creditsButton.off('selected');
     });
-
-    this.load.spritesheet('hand',
-      'assets/swatter.png',
-      { frameWidth: 32, frameHeight: 48 }
-    );
 
     this.anims.create({
       key: 'swatting',

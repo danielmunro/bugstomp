@@ -1,5 +1,6 @@
 import Button from "../objects/ui/Button"
 import Swatter from "../objects/Swatter"
+import { swatter } from "../preloaders";
 
 export default class CreditsScene extends Phaser.Scene {
   private swatter: Swatter;
@@ -11,10 +12,7 @@ export default class CreditsScene extends Phaser.Scene {
 
   preload() {
     this.load.image('glass-panel', 'assets/glassPanel.png');
-    this.load.spritesheet('hand',
-      'assets/swatter.png',
-      { frameWidth: 32, frameHeight: 48 }
-    );
+    swatter(this);
   }
 
   create() {
@@ -108,11 +106,6 @@ export default class CreditsScene extends Phaser.Scene {
     link(
       'Action Workout ... QubeSounds',
       'https://pixabay.com/users/qubesounds-24397640/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=99524',
-    );
-
-    this.load.spritesheet('hand',
-      'assets/swatter.png',
-      { frameWidth: 32, frameHeight: 48 }
     );
 
     this.anims.create({

@@ -11,6 +11,7 @@ import Projectile from "../objects/baddies/Projectile";
 import Bomb from "../objects/powerups/Bomb";
 import Dragonfly from "../objects/baddies/Dragonfly";
 import Button from "../objects/ui/Button";
+import { swatter } from "../preloaders";
 
 const startLives = 3;
 
@@ -42,8 +43,8 @@ export default class BattleScene extends Phaser.Scene {
   }
 
   preload(): void {
+    swatter(this);
     this.load.image('bg', 'assets/bg-clouds.jpg');
-    this.load.image('star', 'assets/star.png');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
     this.load.image('projectile', 'assets/projectile.png');
@@ -67,10 +68,6 @@ export default class BattleScene extends Phaser.Scene {
       'assets/dragonfly.png',
       {frameWidth: 48, frameHeight: 32}
     );
-    this.load.spritesheet('hand',
-      'assets/swatter.png',
-      {frameWidth: 32, frameHeight: 48}
-    );
     this.load.spritesheet('life-affect',
       'assets/life-affect.png',
       {frameWidth: 32, frameHeight: 48}
@@ -83,7 +80,6 @@ export default class BattleScene extends Phaser.Scene {
       'assets/bomb-power-up.png',
       {frameWidth: 32, frameHeight: 32}
     );
-    this.load.audio('swat', 'assets/swat.mp3');
     this.load.audio('got-hit', 'assets/got-hit.mp3');
     this.load.audio('shooting', 'assets/shooting.mp3');
     this.load.audio('falling-bomb', 'assets/falling-bomb.mp3');
