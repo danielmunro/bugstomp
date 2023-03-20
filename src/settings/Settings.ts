@@ -3,4 +3,8 @@ export default interface Settings {
   startLives: number
   flyMaxVelocity: number
   hornetMaxVelocity: number
+  hornetAppear: number
+  dragonflyAppear: number
+  sendSmallWave: number
+  sendMegaWave: number
 }
