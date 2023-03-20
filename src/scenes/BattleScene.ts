@@ -184,19 +184,20 @@ export default class BattleScene extends LoaderAwareScene {
 
     this.flyCreateCounter = 1000;
     this.createFly();
+    const settings = getSettings();
 
     this.intervals.push(setInterval(() => this.createFly(), 100));
     setTimeout(
       () => this.intervals.push(setInterval(() => this.createHornet(), 100)),
-      10000,
+      settings.hornetAppear,
     );
     setTimeout(
       () => this.intervals.push(setInterval(() => this.createDragonfly(), 100)),
-      12000,
+      settings.dragonflyAppear,
     );
     this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
-    this.intervals.push(setInterval(() => this.sendWave(), 8000));
-    this.intervals.push(setInterval(() => this.sendMegaWave(), 12000));
+    this.intervals.push(setInterval(() => this.sendWave(), settings.sendSmallWave));
+    this.intervals.push(setInterval(() => this.sendMegaWave(), settings.sendMegaWave));
     this.intervals.push(setInterval(() => this.create1Up(), 18000));
     this.intervals.push(setInterval(() => this.createPowerUp(), 10000));
     this.intervals.push(setInterval(() => this.createBomb(), 18000));
@@ -215,6 +216,9 @@ export default class BattleScene extends LoaderAwareScene {
       this.lifeAffect.setPosition(pointer.x, pointer.y + 16);
     }
     if (this.gameOver) {
+      if (this.music[this.musicIndex].isPlaying) {
+        this.music[this.musicIndex].stop();
+      }
       return;
     }
     this.projectiles.children.each((projectile) => {
@@ -349,12 +353,12 @@ export default class BattleScene extends LoaderAwareScene {
     const startOverButton = new Button(this, width / 2, height - 100, 'glass-panel')
       .setDisplaySize(150, 50);
     this.add.existing(startOverButton);
-    this.add.text(startOverButton.x, startOverButton.y, 'Restart')
+    this.add.text(startOverButton.x, startOverButton.y, 'Play Again')
       .setOrigin(0.5);
     startOverButton.on('selected', () => {
-      this.scene.start('battle');
       this.lives = getSettings().startLives;
       this.gameOver = false;
+      this.scene.start('battle');
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       startOverButton.off('selected');
@@ -366,9 +370,9 @@ export default class BattleScene extends LoaderAwareScene {
     this.add.text(mainMenuButton.x, mainMenuButton.y, 'Main Menu')
       .setOrigin(0.5);
     mainMenuButton.on('selected', () => {
-      this.scene.start('main-menu');
       this.lives = getSettings().startLives;
       this.gameOver = false;
+      this.scene.start('main-menu');
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
       mainMenuButton.off('selected');

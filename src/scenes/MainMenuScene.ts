@@ -108,6 +108,9 @@ export default class MainMenuScene extends LoaderAwareScene {
   }
 
   update() {
+    if (!this.introSong.isPlaying) {
+      this.introSong.play();
+    }
     const pointer = this.input.activePointer;
     this.swatter.setPosition(pointer.x, pointer.y + 16);
     this.buttons.forEach((button: any) => {
