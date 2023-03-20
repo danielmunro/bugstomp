@@ -1,4 +1,6 @@
-export default {
+import Settings from "./Settings";
+
+const HardSettings: Settings = {
   startLives: 0,
   superSizeScale: 1.25,
   flyMaxVelocity: 225,
@@ -8,3 +10,5 @@ export default {
   sendSmallWave: 3000,
   sendMegaWave: 9000,
 };
+
+export default HardSettings;
