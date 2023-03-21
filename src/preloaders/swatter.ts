@@ -1,6 +1,7 @@
 import {Scene} from "phaser";
+import Preloader from "./Preloader";
 
-export default function swatter (scene: Scene) {
+const swatterPreloader: Preloader = (scene: Scene) => {
   scene.load.spritesheet('hand',
     'assets/swatter.png',
     {frameWidth: 32, frameHeight: 48}
@@ -14,4 +15,6 @@ export default function swatter (scene: Scene) {
       frameRate: 20,
     });
   };
-}
+};
+
+export default swatterPreloader;

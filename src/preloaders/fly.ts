@@ -1,6 +1,7 @@
 import {Scene} from "phaser";
+import Preloader from "./Preloader";
 
-export default function fly(scene: Scene) {
+const flyPreloader: Preloader = (scene: Scene) => {
   scene.load.spritesheet('fly',
     'assets/fly.png',
     {frameWidth: 32, frameHeight: 32}
@@ -28,4 +29,6 @@ export default function fly(scene: Scene) {
       repeat: -1,
     });
   };
-}
+};
+
+export default flyPreloader;

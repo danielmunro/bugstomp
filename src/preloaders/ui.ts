@@ -1,6 +1,9 @@
 import {Scene} from "phaser";
+import Preloader from "./Preloader";
 
-export default function ui(scene: Scene) {
+const ui: Preloader = (scene: Scene) => {
   scene.load.image('glass-panel', 'assets/glassPanel.png');
   return () => {};
-}
+};
+
+export default ui;
