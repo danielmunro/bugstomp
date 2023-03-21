@@ -15,6 +15,7 @@ import { swatter, ui } from "../preloaders";
 import LoaderAwareScene from "./LoaderAwareScene";
 import {getSettings} from "../userConfig";
 import fly from "../preloaders/fly";
+import hornet from "../preloaders/hornet";
 
 export default class BattleScene extends LoaderAwareScene {
   private score = 0;
@@ -47,19 +48,12 @@ export default class BattleScene extends LoaderAwareScene {
   preload(): void {
     this.addLoader(swatter(this));
     this.addLoader(fly(this));
+    this.addLoader(hornet(this));
     this.addLoader(ui(this));
     this.load.image('bg', 'assets/bg-clouds.jpg');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
     this.load.image('projectile', 'assets/projectile.png');
-    this.load.spritesheet('hornet',
-      'assets/hornet.png',
-      {frameWidth: 32, frameHeight: 32}
-    );
-    this.load.spritesheet('hornet-attacking',
-      'assets/hornet-attacking.png',
-      {frameWidth: 32, frameHeight: 32}
-    );
     this.load.spritesheet('dragonfly',
       'assets/dragonfly.png',
       {frameWidth: 48, frameHeight: 32}
@@ -76,10 +70,7 @@ export default class BattleScene extends LoaderAwareScene {
       'assets/bomb-power-up.png',
       {frameWidth: 32, frameHeight: 32}
     );
-    this.load.audio('got-hit', 'assets/got-hit.mp3');
-    this.load.audio('shooting', 'assets/shooting.mp3');
     this.load.audio('falling-bomb', 'assets/falling-bomb.mp3');
-    this.load.audio('pop', 'assets/pop.mp3');
     this.load.audio('euphoria', 'assets/euphoria.mp3');
     this.load.audio('modern-summer', 'assets/modern-summer.mp3');
     this.load.audio('rock-the-party', 'assets/rock-the-party.mp3');
@@ -94,21 +85,6 @@ export default class BattleScene extends LoaderAwareScene {
     this.background = this.add.image(width / 2, height / 2, 'bg');
     this.swattables = this.physics.add.group();
     this.projectiles = this.physics.add.group();
-    this.anims.create({
-      key: 'hornet',
-      frames: this.anims.generateFrameNumbers('hornet', {start: 0, end: 1}),
-      frameRate: 20,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: 'hornet-attacking',
-      frames: this.anims.generateFrameNumbers('hornet-attacking', {
-        start: 0,
-        end: 3
-      }),
-      frameRate: 20,
-      repeat: -1,
-    });
     this.anims.create({
       key: 'dragonfly',
       frames: this.anims.generateFrameNumbers('dragonfly', {

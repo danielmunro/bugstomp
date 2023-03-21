@@ -7,7 +7,7 @@ const swatterPreloader: Preloader = (scene: Scene) => {
     {frameWidth: 32, frameHeight: 48}
   );
   scene.load.audio('swat', 'assets/swat.mp3');
-
+  scene.load.audio('got-hit', 'assets/got-hit.mp3');
   return () => {
     scene.anims.create({
       key: 'swatting',
