@@ -14,6 +14,7 @@ import Button from "../objects/ui/Button";
 import { swatter, ui } from "../preloaders";
 import LoaderAwareScene from "./LoaderAwareScene";
 import {getSettings} from "../userConfig";
+import fly from "../preloaders/fly";
 
 export default class BattleScene extends LoaderAwareScene {
   private score = 0;
@@ -45,19 +46,12 @@ export default class BattleScene extends LoaderAwareScene {
 
   preload(): void {
     this.addLoader(swatter(this));
+    this.addLoader(fly(this));
     this.addLoader(ui(this));
     this.load.image('bg', 'assets/bg-clouds.jpg');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
     this.load.image('projectile', 'assets/projectile.png');
-    this.load.spritesheet('fly',
-      'assets/fly.png',
-      {frameWidth: 32, frameHeight: 32}
-    );
-    this.load.spritesheet('fly-attacking',
-      'assets/fly-attacking.png',
-      {frameWidth: 32, frameHeight: 32}
-    );
     this.load.spritesheet('hornet',
       'assets/hornet.png',
       {frameWidth: 32, frameHeight: 32}
@@ -100,21 +94,6 @@ export default class BattleScene extends LoaderAwareScene {
     this.background = this.add.image(width / 2, height / 2, 'bg');
     this.swattables = this.physics.add.group();
     this.projectiles = this.physics.add.group();
-    this.anims.create({
-      key: 'fly',
-      frames: this.anims.generateFrameNumbers('fly', {start: 0, end: 1}),
-      frameRate: 20,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: 'fly-attacking',
-      frames: this.anims.generateFrameNumbers('fly-attacking', {
-        start: 0,
-        end: 3
-      }),
-      frameRate: 20,
-      repeat: -1,
-    });
     this.anims.create({
       key: 'hornet',
       frames: this.anims.generateFrameNumbers('hornet', {start: 0, end: 1}),
