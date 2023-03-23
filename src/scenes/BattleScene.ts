@@ -16,6 +16,8 @@ import PreloaderAwareScene from "./PreloaderAwareScene";
 import {getSettings} from "../userConfig";
 import fly from "../preloaders/fly";
 import hornet from "../preloaders/hornet";
+import beetle from "../preloaders/beetle";
+import Beetle from "../objects/baddies/Beetle";
 
 export default class BattleScene extends PreloaderAwareScene {
   private score = 0;
@@ -32,6 +34,7 @@ export default class BattleScene extends PreloaderAwareScene {
   private flyCreateCounter = 0;
   private hornetCreateCounter = 0;
   private dragonflyCreateCounter = 0;
+  private beetleCreateCounter = 0;
   private intervals: Array<NodeJS.Timer> = [];
   private invincible = false;
   private lifeAffect: Phaser.GameObjects.Sprite;
@@ -50,6 +53,7 @@ export default class BattleScene extends PreloaderAwareScene {
       swatter,
       fly,
       hornet,
+      beetle,
       ui,
     ]);
     this.load.image('bg', 'assets/bg-clouds.jpg');
@@ -152,6 +156,7 @@ export default class BattleScene extends PreloaderAwareScene {
       () => this.intervals.push(setInterval(() => this.createDragonfly(), 100)),
       settings.dragonflyAppear,
     );
+    this.intervals.push(setInterval(() => this.createBeetle(), 100));
     this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
     this.intervals.push(setInterval(() => this.sendWave(), settings.sendSmallWave));
     this.intervals.push(setInterval(() => this.sendMegaWave(), settings.sendMegaWave));
@@ -477,6 +482,17 @@ export default class BattleScene extends PreloaderAwareScene {
         clearInterval(destroyInterval);
       }
     }, 100);
+  }
+
+  private createBeetle() {
+    this.beetleCreateCounter++;
+    if (this.beetleCreateCounter < 60) {
+      return;
+    }
+    this.beetleCreateCounter = 0;
+    const left = Phaser.Math.Between(0, 1);
+    const beetle = new Beetle(this, this.swattables, left ? 0 : width, 50);
+    beetle.changeVelocity();
   }
 
   private updateGameTimer() {
