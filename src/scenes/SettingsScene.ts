@@ -18,14 +18,15 @@ export default class SettingsScene extends PreloaderAwareScene {
   }
 
   preload() {
-    this.addPreloader(swatter);
-    this.addPreloader(ui);
-    this.callPreloader();
+    this.preloaders([
+      swatter,
+      ui,
+    ]);
   }
 
   create() {
-    const {width, height} = this.scale;
     this.callCreate();
+    const {width, height} = this.scale;
 
     // back button
     const backButton = new Button(this, width / 2, height / 2, 'glass-panel')

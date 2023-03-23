@@ -14,16 +14,17 @@ export default class MainMenuScene extends PreloaderAwareScene {
   }
 
   preload() {
-    this.addPreloader(swatter);
-    this.addPreloader(ui);
-    this.callPreloader();
+    this.preloaders([
+      swatter,
+      ui,
+    ]);
     this.loadFont('pe', './assets/pixelemulator.ttf');
     this.load.audio('action-workout', './assets/action-workout.mp3');
   }
 
   create() {
-    const { width, height } = this.scale;
     this.callCreate();
+    const { width, height } = this.scale;
     if (!this.introSong) {
       const songConfig = {
         loop: true,

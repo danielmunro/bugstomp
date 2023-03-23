@@ -46,15 +46,16 @@ export default class BattleScene extends PreloaderAwareScene {
   }
 
   preload(): void {
-    this.addPreloader(swatter);
-    this.addPreloader(fly);
-    this.addPreloader(hornet);
-    this.addPreloader(ui);
+    this.preloaders([
+      swatter,
+      fly,
+      hornet,
+      ui,
+    ]);
     this.load.image('bg', 'assets/bg-clouds.jpg');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
     this.load.image('projectile', 'assets/projectile.png');
-    this.callPreloader();
     this.load.spritesheet('dragonfly',
       'assets/dragonfly.png',
       {frameWidth: 48, frameHeight: 32}
