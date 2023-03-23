@@ -12,12 +12,12 @@ import Bomb from "../objects/powerups/Bomb";
 import Dragonfly from "../objects/baddies/Dragonfly";
 import Button from "../objects/ui/Button";
 import { swatter, ui } from "../preloaders";
-import LoaderAwareScene from "./LoaderAwareScene";
+import PreloaderAwareScene from "./PreloaderAwareScene";
 import {getSettings} from "../userConfig";
 import fly from "../preloaders/fly";
 import hornet from "../preloaders/hornet";
 
-export default class BattleScene extends LoaderAwareScene {
+export default class BattleScene extends PreloaderAwareScene {
   private score = 0;
   private highScoreText: Phaser.GameObjects.Text;
   private scoreText: Phaser.GameObjects.Text;
@@ -46,14 +46,15 @@ export default class BattleScene extends LoaderAwareScene {
   }
 
   preload(): void {
-    this.addLoader(swatter(this));
-    this.addLoader(fly(this));
-    this.addLoader(hornet(this));
-    this.addLoader(ui(this));
+    this.addPreloader(swatter);
+    this.addPreloader(fly);
+    this.addPreloader(hornet);
+    this.addPreloader(ui);
     this.load.image('bg', 'assets/bg-clouds.jpg');
     this.load.image('life', 'assets/level-up.png');
     this.load.image('powerup', 'assets/power-up.png');
     this.load.image('projectile', 'assets/projectile.png');
+    this.callPreloader();
     this.load.spritesheet('dragonfly',
       'assets/dragonfly.png',
       {frameWidth: 48, frameHeight: 32}
@@ -79,7 +80,7 @@ export default class BattleScene extends LoaderAwareScene {
   }
 
   create(): void {
-    this.callLoaders();
+    this.callCreate();
     this.score = 0;
     this.gameTimer = 0;
     this.background = this.add.image(width / 2, height / 2, 'bg');
@@ -153,7 +154,7 @@ export default class BattleScene extends LoaderAwareScene {
     this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
     this.intervals.push(setInterval(() => this.sendWave(), settings.sendSmallWave));
     this.intervals.push(setInterval(() => this.sendMegaWave(), settings.sendMegaWave));
-    this.intervals.push(setInterval(() => this.create1Up(), 18000));
+    this.intervals.push(setInterval(() => this.create1Up(), 16000));
     this.intervals.push(setInterval(() => this.createPowerUp(), 10000));
     this.intervals.push(setInterval(() => this.createBomb(), 18000));
     this.music.push(this.sound.add('euphoria'));
@@ -171,22 +172,12 @@ export default class BattleScene extends LoaderAwareScene {
       this.lifeAffect.setPosition(pointer.x, pointer.y + 16);
     }
     if (this.gameOver) {
-      if (this.music[this.musicIndex].isPlaying) {
-        this.music[this.musicIndex].stop();
-      }
+      this.stopMusic();
+      this.disableBugs();
       return;
     }
-    this.projectiles.children.each((projectile) => {
-      const p = projectile as Projectile;
-      if (Phaser.Geom.Intersects.RectangleToRectangle(p.getBounds(), this.swatter.getBounds())) {
-        this.gotHit();
-      }
-    });
-    this.swattables.children.each((swattable) => {
-      if (!swattable.active) {
-        this.swattables.remove(swattable);
-      }
-    });
+    this.checkForHit();
+    this.removeDisabledSwattables();
     if (!this.music[this.musicIndex].isPlaying) {
       this.musicIndex += 1;
       if (this.musicIndex >= this.music.length) {
@@ -241,11 +232,7 @@ export default class BattleScene extends LoaderAwareScene {
 
   destroyAll() {
     this.swattables.children.each((swattable: any) => {
-      if (swattable instanceof Bomb) {
-        return;
-      }
-      if (swattable instanceof Life || swattable instanceof SuperSize) {
-        swattable.disableBody(true, true);
+      if (swattable instanceof Bomb || swattable instanceof Life || swattable instanceof SuperSize) {
         return;
       }
       const sw = swattable as SwattableObject;
@@ -284,6 +271,42 @@ export default class BattleScene extends LoaderAwareScene {
     this.scoreText.setText(`score: ${this.score}`);
   }
 
+  private stopMusic() {
+    if (this.music[this.musicIndex].isPlaying) {
+      this.music[this.musicIndex].stop();
+    }
+  }
+
+  private removeDisabledSwattables() {
+    this.swattables.children.each((swattable) => {
+      if (!swattable.active) {
+        this.swattables.remove(swattable);
+      }
+    });
+  }
+
+  private checkForHit() {
+    this.projectiles.children.each((projectile) => {
+      const p = projectile as Projectile;
+      if (Phaser.Geom.Intersects.RectangleToRectangle(p.getBounds(), this.swatter.getBounds())) {
+        this.gotHit();
+      }
+    });
+  }
+
+  private disableBugs() {
+    this.swattables.children.iterate((bug) => {
+      if (bug.active) {
+        bug.setActive(false);
+        this.tweens.add({
+          targets: bug,
+          duration: 1000,
+          alpha: 0.1,
+        });
+      }
+    });
+  }
+
   private doGameOver() {
     this.gameOver = true;
     if (this.score > BattleScene.maxScoreThisSession) {
@@ -294,17 +317,9 @@ export default class BattleScene extends LoaderAwareScene {
       duration: 1000,
       alpha: 0.1,
     });
-    this.music[this.musicIndex].stop();
+    this.stopMusic();
     this.sound.play('game-over');
     this.intervals.forEach((interval) => clearInterval(interval));
-    this.swattables.children.iterate((bug) => {
-      bug.setActive(false);
-      this.tweens.add({
-        targets: bug,
-        duration: 1000,
-        alpha: 0.1,
-      });
-    });
     const startOverButton = new Button(this, width / 2, height - 100, 'glass-panel')
       .setDisplaySize(150, 50);
     this.add.existing(startOverButton);

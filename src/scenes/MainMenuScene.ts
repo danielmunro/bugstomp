@@ -2,9 +2,9 @@ import Swatter from "../objects/Swatter"
 import Button from "../objects/ui/Button"
 import SwattableObject from "../interfaces/SwattableObject"
 import { swatter, ui } from "../preloaders";
-import LoaderAwareScene from "./LoaderAwareScene";
+import PreloaderAwareScene from "./PreloaderAwareScene";
 
-export default class MainMenuScene extends LoaderAwareScene {
+export default class MainMenuScene extends PreloaderAwareScene {
   private buttons: SwattableObject[] = [];
   private swatter: Swatter;
   private introSong: Phaser.Sound.BaseSound;
@@ -14,15 +14,16 @@ export default class MainMenuScene extends LoaderAwareScene {
   }
 
   preload() {
-    this.addLoader(swatter(this));
-    this.addLoader(ui(this));
+    this.addPreloader(swatter);
+    this.addPreloader(ui);
+    this.callPreloader();
     this.loadFont('pe', './assets/pixelemulator.ttf');
     this.load.audio('action-workout', './assets/action-workout.mp3');
   }
 
   create() {
     const { width, height } = this.scale;
-    this.callLoaders();
+    this.callCreate();
     if (!this.introSong) {
       const songConfig = {
         loop: true,

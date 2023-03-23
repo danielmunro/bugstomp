@@ -1,9 +1,9 @@
 import Button from "../objects/ui/Button"
 import Swatter from "../objects/Swatter"
 import { swatter, ui } from "../preloaders";
-import LoaderAwareScene from "./LoaderAwareScene";
+import PreloaderAwareScene from "./PreloaderAwareScene";
 
-export default class CreditsScene extends LoaderAwareScene {
+export default class CreditsScene extends PreloaderAwareScene {
   private swatter: Swatter;
   private backButton: Button;
 
@@ -12,13 +12,14 @@ export default class CreditsScene extends LoaderAwareScene {
   }
 
   preload() {
-    this.addLoader(swatter(this));
-    this.addLoader(ui(this));
+    this.addPreloader(swatter);
+    this.addPreloader(ui);
+    this.callPreloader();
   }
 
   create() {
     const {width, height} = this.scale;
-    this.callLoaders();
+    this.callCreate();
     this.backButton = new Button(this, width / 2, height - 40, 'glass-panel')
       .setDisplaySize(150, 50);
     this.add.existing(this.backButton);

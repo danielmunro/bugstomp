@@ -2,10 +2,10 @@ import Button from "../objects/ui/Button"
 import Swatter from "../objects/Swatter"
 import SwattableObject from "../interfaces/SwattableObject";
 import { swatter, ui } from "../preloaders";
-import LoaderAwareScene from "./LoaderAwareScene";
+import PreloaderAwareScene from "./PreloaderAwareScene";
 import {chosenDifficulty, setDifficulty} from "../userConfig";
 
-export default class SettingsScene extends LoaderAwareScene {
+export default class SettingsScene extends PreloaderAwareScene {
   private swatter: Swatter;
   private buttons: Array<Phaser.GameObjects.Image> = [];
   private easyButton: Phaser.GameObjects.Image;
@@ -18,13 +18,14 @@ export default class SettingsScene extends LoaderAwareScene {
   }
 
   preload() {
-    this.addLoader(swatter(this));
-    this.addLoader(ui(this));
+    this.addPreloader(swatter);
+    this.addPreloader(ui);
+    this.callPreloader();
   }
 
   create() {
     const {width, height} = this.scale;
-    this.callLoaders();
+    this.callCreate();
 
     // back button
     const backButton = new Button(this, width / 2, height / 2, 'glass-panel')
