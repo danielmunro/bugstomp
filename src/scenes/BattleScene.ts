@@ -147,22 +147,22 @@ export default class BattleScene extends PreloaderAwareScene {
     this.createFly();
     const settings = getSettings();
 
-    // this.intervals.push(setInterval(() => this.createFly(), 100));
-    // setTimeout(
-    //   () => this.intervals.push(setInterval(() => this.createHornet(), 100)),
-    //   settings.hornetAppear,
-    // );
-    // setTimeout(
-    //   () => this.intervals.push(setInterval(() => this.createDragonfly(), 100)),
-    //   settings.dragonflyAppear,
-    // );
+    this.intervals.push(setInterval(() => this.createFly(), 100));
+    setTimeout(
+      () => this.intervals.push(setInterval(() => this.createHornet(), 100)),
+      settings.hornetAppear,
+    );
+    setTimeout(
+      () => this.intervals.push(setInterval(() => this.createDragonfly(), 100)),
+      settings.dragonflyAppear,
+    );
     this.intervals.push(setInterval(() => this.createBeetle(), 100));
     this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
-    // this.intervals.push(setInterval(() => this.sendWave(), settings.sendSmallWave));
-    // this.intervals.push(setInterval(() => this.sendMegaWave(), settings.sendMegaWave));
-    // this.intervals.push(setInterval(() => this.create1Up(), 16000));
-    // this.intervals.push(setInterval(() => this.createPowerUp(), 10000));
-    // this.intervals.push(setInterval(() => this.createBomb(), 18000));
+    this.intervals.push(setInterval(() => this.sendWave(), settings.sendSmallWave));
+    this.intervals.push(setInterval(() => this.sendMegaWave(), settings.sendMegaWave));
+    this.intervals.push(setInterval(() => this.create1Up(), 16000));
+    this.intervals.push(setInterval(() => this.createPowerUp(), 10000));
+    this.intervals.push(setInterval(() => this.createBomb(), 18000));
     this.music.push(this.sound.add('euphoria'));
     this.music.push(this.sound.add('modern-summer'));
     this.music.push(this.sound.add('action-workout'));
@@ -486,7 +486,7 @@ export default class BattleScene extends PreloaderAwareScene {
 
   private createBeetle() {
     this.beetleCreateCounter++;
-    if (this.beetleCreateCounter < 60) {
+    if (this.beetleCreateCounter < 12) {
       return;
     }
     this.beetleCreateCounter = 0;

@@ -11,7 +11,9 @@ export default class Hornet extends Bug {
         if (this.active) {
             const maxVelocity = getSettings().hornetMaxVelocity;
             const velocity = () => Phaser.Math.Between(-maxVelocity, maxVelocity);
-            this.setVelocity(velocity(), velocity());
+            const xVelocity = velocity();
+            this.setVelocity(xVelocity, velocity());
+            this.flipX = xVelocity < 0;
             setTimeout(() => this.changeVelocity(), Phaser.Math.Between(1000, 4000));
         }
     }
