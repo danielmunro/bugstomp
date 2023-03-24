@@ -147,22 +147,22 @@ export default class BattleScene extends PreloaderAwareScene {
     this.createFly();
     const settings = getSettings();
 
-    this.intervals.push(setInterval(() => this.createFly(), 100));
-    setTimeout(
-      () => this.intervals.push(setInterval(() => this.createHornet(), 100)),
-      settings.hornetAppear,
-    );
-    setTimeout(
-      () => this.intervals.push(setInterval(() => this.createDragonfly(), 100)),
-      settings.dragonflyAppear,
-    );
+    // this.intervals.push(setInterval(() => this.createFly(), 100));
+    // setTimeout(
+    //   () => this.intervals.push(setInterval(() => this.createHornet(), 100)),
+    //   settings.hornetAppear,
+    // );
+    // setTimeout(
+    //   () => this.intervals.push(setInterval(() => this.createDragonfly(), 100)),
+    //   settings.dragonflyAppear,
+    // );
     this.intervals.push(setInterval(() => this.createBeetle(), 100));
     this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
-    this.intervals.push(setInterval(() => this.sendWave(), settings.sendSmallWave));
-    this.intervals.push(setInterval(() => this.sendMegaWave(), settings.sendMegaWave));
-    this.intervals.push(setInterval(() => this.create1Up(), 16000));
-    this.intervals.push(setInterval(() => this.createPowerUp(), 10000));
-    this.intervals.push(setInterval(() => this.createBomb(), 18000));
+    // this.intervals.push(setInterval(() => this.sendWave(), settings.sendSmallWave));
+    // this.intervals.push(setInterval(() => this.sendMegaWave(), settings.sendMegaWave));
+    // this.intervals.push(setInterval(() => this.create1Up(), 16000));
+    // this.intervals.push(setInterval(() => this.createPowerUp(), 10000));
+    // this.intervals.push(setInterval(() => this.createBomb(), 18000));
     this.music.push(this.sound.add('euphoria'));
     this.music.push(this.sound.add('modern-summer'));
     this.music.push(this.sound.add('action-workout'));
@@ -205,9 +205,9 @@ export default class BattleScene extends PreloaderAwareScene {
     }
   }
 
-  createProjectile(h: Hornet, speed: number) {
-    const p = new Projectile(this, this.projectiles, h.x, h.y + (h.height / 2));
-    const angleDeg = (Math.atan2(this.swatter.y - p.y , this.swatter.x - p.x) * 180 / Math.PI);
+  createProjectile(startX: number, startY: number, targetX: number, targetY: number, speed: number) {
+    const p = new Projectile(this, this.projectiles, startX, startY);
+    const angleDeg = (Math.atan2(targetY - p.y , targetX - p.x) * 180 / Math.PI);
     const velocity = this.physics.velocityFromAngle(angleDeg, speed);
     p.setVelocity(velocity.x, velocity.y);
   }

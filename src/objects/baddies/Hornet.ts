@@ -17,7 +17,7 @@ export default class Hornet extends Bug {
     }
 
     attack() {
-        if (this.active) {
+        if (this.active && this.alive) {
             const scene = this.scene as BattleScene;
             this.setVelocity(0, 0);
             let created = 0;
@@ -29,7 +29,8 @@ export default class Hornet extends Bug {
                     this.startLifecycle();
                     return;
                 }
-                scene.createProjectile(this, 200);
+                const swatter = scene.getSwatter();
+                scene.createProjectile(this.x, this.y + (this.height / 2), swatter.x, swatter.y, 200);
                 created++;
             }, 100);
         }

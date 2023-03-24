@@ -32,7 +32,8 @@ export default class Dragonfly extends Bug {
           clearInterval(createAttackInt);
           return;
         }
-        scene.createProjectile(this, 100);
+        const swatter = scene.getSwatter();
+        scene.createProjectile(this.x, this.y + (this.height / 2), swatter.x, swatter.y, 200);
         created++;
       }, 100);
     }

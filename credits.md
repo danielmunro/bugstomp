@@ -8,6 +8,8 @@ Swat sound effect by [Universfield](https://pixabay.com/users/universfield-28281
 
 Ouch sound effect by [beetpro](https://pixabay.com/users/beetpro-16097074/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=11844) from [Pixabay](https://pixabay.com/sound-effects//?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=11844)
 
+Beetle hit sound effect by [Pixabay](https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=47202)
+
 Shooting sound effect from [Pixabay](https://pixabay.com/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=14443)
 
 Falling bomb sound effect from [Pixabay](https://pixabay.com/sound-effects/?utm_source=link-attribution&amp;utm_medium=referral&amp;utm_campaign=music&amp;utm_content=41038)
