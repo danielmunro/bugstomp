@@ -18,6 +18,7 @@ import fly from "../preloaders/fly";
 import hornet from "../preloaders/hornet";
 import beetle from "../preloaders/beetle";
 import Beetle from "../objects/baddies/Beetle";
+import Tempo from "../Tempo";
 
 export default class BattleScene extends PreloaderAwareScene {
   private score = 0;
@@ -32,9 +33,6 @@ export default class BattleScene extends PreloaderAwareScene {
   private gameOver = false;
   private gameTimer = 0;
   private flyCreateCounter = 0;
-  private hornetCreateCounter = 0;
-  private dragonflyCreateCounter = 0;
-  private beetleCreateCounter = 0;
   private intervals: Array<NodeJS.Timer> = [];
   private invincible = false;
   private lifeAffect: Phaser.GameObjects.Sprite;
@@ -43,6 +41,7 @@ export default class BattleScene extends PreloaderAwareScene {
   private buttons: Array<Button> = [];
   private static maxScoreThisSession = 0;
   private background: Phaser.GameObjects.Image;
+  private tempo = new Tempo(this);
 
   constructor() {
     super('battle');
@@ -145,24 +144,11 @@ export default class BattleScene extends PreloaderAwareScene {
 
     this.flyCreateCounter = 1000;
     this.createFly();
-    const settings = getSettings();
+    this.intervals.push(setInterval(() => {
+      this.updateGameTimer();
+      this.tempo.pulse(this.gameTimer);
+    }, 1000));
 
-    this.intervals.push(setInterval(() => this.createFly(), 100));
-    setTimeout(
-      () => this.intervals.push(setInterval(() => this.createHornet(), 100)),
-      settings.hornetAppear,
-    );
-    setTimeout(
-      () => this.intervals.push(setInterval(() => this.createDragonfly(), 100)),
-      settings.dragonflyAppear,
-    );
-    this.intervals.push(setInterval(() => this.createBeetle(), 100));
-    this.intervals.push(setInterval(() => this.updateGameTimer(), 1000));
-    this.intervals.push(setInterval(() => this.sendWave(), settings.sendSmallWave));
-    this.intervals.push(setInterval(() => this.sendMegaWave(), settings.sendMegaWave));
-    this.intervals.push(setInterval(() => this.create1Up(), 16000));
-    this.intervals.push(setInterval(() => this.createPowerUp(), 10000));
-    this.intervals.push(setInterval(() => this.createBomb(), 18000));
     this.music.push(this.sound.add('euphoria'));
     this.music.push(this.sound.add('modern-summer'));
     this.music.push(this.sound.add('action-workout'));
@@ -277,6 +263,115 @@ export default class BattleScene extends PreloaderAwareScene {
     this.scoreText.setText(`score: ${this.score}`);
   }
 
+  createBomb() {
+    const y = height + 16;
+    const x = Phaser.Math.Between(100, width - 100);
+    const powerup = new Bomb(this, this.swattables, x, y);
+    powerup.setVelocityY(-100);
+    const moveInt = setInterval(() => {
+      if (powerup.y < 0) {
+        powerup.disableBody(true, true);
+        this.swattables.remove(powerup);
+      }
+      if (powerup.active) {
+        powerup.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);
+      } else {
+        clearTimeout(moveInt);
+      }
+    }, 800);
+  }
+
+  createPowerUp() {
+    const y = height + 16;
+    const x = Phaser.Math.Between(100, width - 100);
+    const powerup = new SuperSize(this, this.swattables, x, y);
+    powerup.setVelocityY(-100);
+    const moveInt = setInterval(() => {
+      if (powerup.y < 0) {
+        powerup.disableBody(true, true);
+        this.swattables.remove(powerup);
+      }
+      if (powerup.active) {
+        powerup.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);
+      } else {
+        clearTimeout(moveInt);
+      }
+    }, 800);
+  }
+
+  create1Up() {
+    const y = height + 16;
+    const x = Phaser.Math.Between(100, width - 100);
+    const life = new Life(this, this.swattables, x, y);
+    life.setVelocityY(-100);
+    const moveInt = setInterval(() => {
+      if (life.y < 0) {
+        life.disableBody(true, true);
+        this.swattables.remove(life);
+      }
+      if (life.active) {
+        life.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);
+      } else {
+        clearTimeout(moveInt);
+      }
+    }, 800);
+  }
+
+  createBeetle() {
+    const left = Phaser.Math.Between(0, 1);
+    const beetle = new Beetle(this, this.swattables, left ? 0 : width, 50);
+    beetle.changeVelocity();
+  }
+
+  createFly() {
+    const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
+    const fly = new Fly(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
+    fly.changeVelocity();
+  }
+
+  createHornet() {
+    const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
+    const hornet = new Hornet(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
+    hornet.changeVelocity();
+  }
+
+  createDragonfly() {
+    const left = Phaser.Math.Between(0, 1);
+    const dragonfly = new Dragonfly(this, this.swattables, left ? 0 : width, 50);
+    dragonfly.changeVelocity();
+    const destroyInterval = setInterval(() => {
+      if (dragonfly.x > 800) {
+        dragonfly.disableBody(true, true);
+        this.swattables.remove(dragonfly);
+        clearInterval(destroyInterval);
+      }
+    }, 100);
+  }
+
+  sendWave() {
+    if (this.gameTimer < 20) {
+      this.sendFlyWave();
+    } else {
+      this.sendHornetWave();
+    }
+  }
+
+  sendMegaWave(intensity: number) {
+    const amount = BattleScene.getAmountForMegaWave(intensity);
+    for (let i = 0; i < amount; i++) {
+      setTimeout(() => this.createFly(), Phaser.Math.Between(50, 2000));
+    }
+  }
+
+  private static getAmountForMegaWave(intensity: number) {
+    switch (intensity) {
+      case 0: return 10;
+      case 1: return 30;
+      case 2: return 90;
+      default: return 180;
+    }
+  }
+
   private stopMusic() {
     if (this.music[this.musicIndex].isPlaying) {
       this.music[this.musicIndex].stop();
@@ -325,6 +420,7 @@ export default class BattleScene extends PreloaderAwareScene {
     });
     this.stopMusic();
     this.sound.play('game-over');
+    this.tempo.endPhase();
     this.intervals.forEach((interval) => clearInterval(interval));
     const startOverButton = new Button(this, width / 2, height - 100, 'glass-panel')
       .setDisplaySize(150, 50);
@@ -356,74 +452,6 @@ export default class BattleScene extends PreloaderAwareScene {
     this.buttons.push(startOverButton, mainMenuButton);
   }
 
-  private createBomb() {
-    const y = height + 16;
-    const x = Phaser.Math.Between(100, width - 100);
-    const powerup = new Bomb(this, this.swattables, x, y);
-    powerup.setVelocityY(-100);
-    const moveInt = setInterval(() => {
-      if (powerup.y < 0) {
-        powerup.disableBody(true, true);
-        this.swattables.remove(powerup);
-      }
-      if (powerup.active) {
-        powerup.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);
-      } else {
-        clearTimeout(moveInt);
-      }
-    }, 800);
-  }
-
-  private createPowerUp() {
-    const y = height + 16;
-    const x = Phaser.Math.Between(100, width - 100);
-    const powerup = new SuperSize(this, this.swattables, x, y);
-    powerup.setVelocityY(-100);
-    const moveInt = setInterval(() => {
-      if (powerup.y < 0) {
-        powerup.disableBody(true, true);
-        this.swattables.remove(powerup);
-      }
-      if (powerup.active) {
-        powerup.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);
-      } else {
-        clearTimeout(moveInt);
-      }
-    }, 800);
-  }
-
-  private create1Up() {
-    const y = height + 16;
-    const x = Phaser.Math.Between(100, width - 100);
-    const life = new Life(this, this.swattables, x, y);
-    life.setVelocityY(-100);
-    const moveInt = setInterval(() => {
-      if (life.y < 0) {
-        life.disableBody(true, true);
-        this.swattables.remove(life);
-      }
-      if (life.active) {
-        life.setVelocityX(Phaser.Math.Between(0, 1) == 1 ? -50 : 50);
-      } else {
-        clearTimeout(moveInt);
-      }
-    }, 800);
-  }
-
-  private sendWave() {
-    if (this.gameTimer < 20) {
-      this.sendFlyWave();
-    } else {
-      this.sendHornetWave();
-    }
-  }
-
-  private sendMegaWave() {
-    for (let i = 0; i < 50; i++) {
-      setTimeout(() => this.createFly(true, ), Phaser.Math.Between(50, 2000));
-    }
-  }
-
   private swat() {
     this.swatter.playSwatAnim();
     this.buttons.forEach((button) => {
@@ -440,59 +468,6 @@ export default class BattleScene extends PreloaderAwareScene {
         swattable.swat();
       }
     });
-  }
-
-  private createFly(ignoreCounter = false) {
-    if (!ignoreCounter) {
-      this.flyCreateCounter++;
-      if (this.flyCreateCounter < 30 || this.gameTimer > 10 && this.flyCreateCounter < 20) {
-        return;
-      }
-      this.flyCreateCounter = 0;
-    }
-    const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
-    const fly = new Fly(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
-    fly.changeVelocity();
-  }
-
-  private createHornet() {
-    this.hornetCreateCounter++;
-    if (this.gameTimer < 27 && this.hornetCreateCounter < 30 || this.hornetCreateCounter < 20) {
-      return;
-    }
-    this.hornetCreateCounter = 0;
-    const x = Phaser.Math.Between(0, 1), y = Phaser.Math.Between(0, 1);
-    const hornet = new Hornet(this, this.swattables, x ? 100 : width - 100, y ? 100 : height - 100);
-    hornet.changeVelocity();
-  }
-
-  private createDragonfly() {
-    this.dragonflyCreateCounter++;
-    if (this.dragonflyCreateCounter < 60) {
-      return;
-    }
-    this.dragonflyCreateCounter = 0;
-    const left = Phaser.Math.Between(0, 1);
-    const dragonfly = new Dragonfly(this, this.swattables, left ? 0 : width, 50);
-    dragonfly.changeVelocity();
-    const destroyInterval = setInterval(() => {
-      if (dragonfly.x > 800) {
-        dragonfly.disableBody(true, true);
-        this.swattables.remove(dragonfly);
-        clearInterval(destroyInterval);
-      }
-    }, 100);
-  }
-
-  private createBeetle() {
-    this.beetleCreateCounter++;
-    if (this.beetleCreateCounter < 12) {
-      return;
-    }
-    this.beetleCreateCounter = 0;
-    const left = Phaser.Math.Between(0, 1);
-    const beetle = new Beetle(this, this.swattables, left ? 0 : width, 50);
-    beetle.changeVelocity();
   }
 
   private updateGameTimer() {

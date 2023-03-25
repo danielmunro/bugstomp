@@ -5,6 +5,7 @@ export default interface Settings {
   hornetMaxVelocity: number
   hornetAppear: number
   dragonflyAppear: number
+  beetleAppear: number
   sendSmallWave: number
   sendMegaWave: number
 }

@@ -7,6 +7,7 @@ const EasySettings: Settings = {
   hornetMaxVelocity: 125,
   hornetAppear: 20000,
   dragonflyAppear: 25000,
+  beetleAppear: 30000,
   sendSmallWave: 12000,
   sendMegaWave: 17000,
 };

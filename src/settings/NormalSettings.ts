@@ -7,6 +7,7 @@ const NormalSettings: Settings = {
   hornetMaxVelocity: 175,
   hornetAppear: 10000,
   dragonflyAppear: 12000,
+  beetleAppear: 16000,
   sendSmallWave: 8000,
   sendMegaWave: 12000,
 };
