@@ -368,6 +368,7 @@ export default class BattleScene extends PreloaderAwareScene {
       case 0: return 10;
       case 1: return 30;
       case 2: return 90;
+      case 3: return 800;
       default: return 180;
     }
   }

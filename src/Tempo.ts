@@ -9,8 +9,10 @@ export default class Tempo {
   constructor(private scene: BattleScene) {}
 
   pulse(time: number) {
-    if (time > 60) {
+    if (time > 60 && this.phase === 1) {
       this.endPhase();
+      this.phase = 2;
+      this.phase2();
     }
     if (this.phase === 0) {
       this.phase = 1;
@@ -46,5 +48,9 @@ export default class Tempo {
       () => this.intervals.push(setInterval(() => this.scene.createBeetle(), 5000)),
       settings.beetleAppear,
     );
+  }
+
+  private phase2() {
+    setTimeout(() => this.scene.sendMegaWave(3), 4000);
   }
 }
