@@ -9,14 +9,17 @@ export default class Tempo {
   constructor(private scene: BattleScene) {}
 
   pulse(time: number) {
-    if (time > 60 && this.phase === 1) {
-      this.endPhase();
-      this.phase = 2;
-      this.phase2();
-    }
     if (this.phase === 0) {
       this.phase = 1;
       this.phase1();
+    } else if (time > 60 && this.phase === 1) {
+      this.endPhase();
+      this.phase = 2;
+      this.phase2();
+    } else if (time > 120 && this.phase === 2) {
+      this.endPhase();
+      this.phase = 3;
+      this.phase3();
     }
   }
 
@@ -45,12 +48,26 @@ export default class Tempo {
       settings.dragonflyAppear,
     );
     setTimeout(
-      () => this.intervals.push(setInterval(() => this.scene.createBeetle(), 5000)),
+      () => this.intervals.push(setInterval(() => this.scene.createBeetle(), 7000)),
       settings.beetleAppear,
     );
   }
 
   private phase2() {
-    setTimeout(() => this.scene.sendMegaWave(3), 4000);
+    this.intervals.push(setInterval(() => this.scene.createHornet(), 3000));
+    this.intervals.push(setInterval(() => this.scene.createBeetle(), 4000));
+    setTimeout(() => {
+      const amount = Phaser.Math.Between(3, 10);
+      for (let i = 0; i < amount; i ++) {
+        this.scene.createFly();
+      }
+    }, 5000);
+    this.intervals.push(setInterval(() => this.scene.sendMegaWave(3), 7500));
+    this.intervals.push(setInterval(() => this.scene.sendWave(), 6000));
+    this.intervals.push(setInterval(() => this.scene.createBomb(), 12000));
+  }
+
+  private phase3() {
+    // add boss battle
   }
 }
