@@ -1684,10 +1684,15 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-eventemitter3@^4.0.0, eventemitter3@^4.0.7:
+eventemitter3@^4.0.0:
   version "4.0.7"
   resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-4.0.7.tgz#2de9b68f6528d5644ef5c59526a1b4a07306169f"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
+
+eventemitter3@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/eventemitter3/-/eventemitter3-5.0.0.tgz#084eb7f5b5388df1451e63f4c2aafd71b217ccb3"
+  integrity sha512-riuVbElZZNXLeLEoprfNYoDSwTBRR44X3mnhdI1YcnENpWTCsTTVZ2zFuqQcpoyqPQIUXdiPEU0ECAq0KQRaHg==
 
 events@^3.2.0:
   version "3.2.0"
@@ -3388,12 +3393,12 @@ pend@~1.2.0:
   resolved "https://registry.yarnpkg.com/pend/-/pend-1.2.0.tgz#7a57eb550a6783f9115331fcf4663d5c8e007a50"
   integrity sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==
 
-phaser@3.60.0-beta.9:
-  version "3.60.0-beta.9"
-  resolved "https://registry.yarnpkg.com/phaser/-/phaser-3.60.0-beta.9.tgz#503c027844b08efd8f6a1a753801119dad9a1a4b"
-  integrity sha512-+teX76tkRlAjx9wvACD7cZLLbOjr+S5cl3iJztcgEBR8D6M6daaG8f0QLF0S5/R6CpZPzKLl3sxDRczGPIT6IQ==
+phaser@3.60.0-beta.21:
+  version "3.60.0-beta.21"
+  resolved "https://registry.yarnpkg.com/phaser/-/phaser-3.60.0-beta.21.tgz#ac2192a1355d25f5e39d89b94d05c703bb6821b3"
+  integrity sha512-Eq12T3Ou0sQD9ZX+O7B7/m9Vo/kutKZUoQ9pRxn8iTS/AadERyVQcIBDEM2OUnpbrZJn/igDqGu/8gsJtyQUIg==
   dependencies:
-    eventemitter3 "^4.0.7"
+    eventemitter3 "^5.0.0"
 
 picomatch@^2.0.4, picomatch@^2.2.1, picomatch@^2.3.1:
   version "2.3.1"

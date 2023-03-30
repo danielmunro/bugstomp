@@ -11,14 +11,13 @@ import Projectile from "../objects/baddies/Projectile";
 import Bomb from "../objects/powerups/Bomb";
 import Dragonfly from "../objects/baddies/Dragonfly";
 import Button from "../objects/ui/Button";
-import { swatter, ui } from "../preloaders";
+import {queen, swatter, ui, fly, hornet, beetle} from "../preloaders";
 import PreloaderAwareScene from "./PreloaderAwareScene";
 import {getSettings} from "../userConfig";
-import fly from "../preloaders/fly";
-import hornet from "../preloaders/hornet";
-import beetle from "../preloaders/beetle";
 import Beetle from "../objects/baddies/Beetle";
 import Tempo from "../Tempo";
+import Queen from "../objects/baddies/Queen";
+import GameObject = Phaser.GameObjects.GameObject;
 
 export default class BattleScene extends PreloaderAwareScene {
   private score = 0;
@@ -54,6 +53,7 @@ export default class BattleScene extends PreloaderAwareScene {
       hornet,
       beetle,
       ui,
+      queen,
     ]);
     this.load.image('bg', 'assets/bg-clouds.jpg');
     this.load.image('life', 'assets/level-up.png');
@@ -223,11 +223,11 @@ export default class BattleScene extends PreloaderAwareScene {
   }
 
   destroyAll() {
-    this.swattables.children.each((swattable: any) => {
+    for (const swattable of this.swattables.getChildren()) {
       if (swattable instanceof Bomb || swattable instanceof Life || swattable instanceof SuperSize) {
         return;
       }
-      const sw = swattable as SwattableObject;
+      const sw = (swattable as any) as SwattableObject;
       const explosion = new ExplosionAffect(this, sw.x, sw.y);
       explosion.anims.play('explosion-affect')
         .once(
@@ -237,7 +237,7 @@ export default class BattleScene extends PreloaderAwareScene {
             sw.swat();
           },
         );
-    });
+    }
   }
 
   incrementLife() {
@@ -348,6 +348,11 @@ export default class BattleScene extends PreloaderAwareScene {
     }, 100);
   }
 
+  createQueen() {
+    const x = width / 2, y = height / 2;
+    const queen = new Queen(this, this.swattables, x, y);
+  }
+
   sendWave() {
     if (this.gameTimer < 20) {
       this.sendFlyWave();
@@ -380,24 +385,24 @@ export default class BattleScene extends PreloaderAwareScene {
   }
 
   private removeDisabledSwattables() {
-    this.swattables.children.each((swattable) => {
+    for (const swattable of this.swattables.getChildren()) {
       if (!swattable.active) {
         this.swattables.remove(swattable);
       }
-    });
+    }
   }
 
   private checkForHit() {
-    this.projectiles.children.each((projectile) => {
+    for (const projectile of this.projectiles.getChildren()) {
       const p = projectile as Projectile;
       if (Phaser.Geom.Intersects.RectangleToRectangle(p.getBounds(), this.swatter.getBounds())) {
         this.gotHit();
       }
-    });
+    }
   }
 
   private disableBugs() {
-    this.swattables.children.iterate((bug) => {
+    for (const bug of this.swattables.getChildren()) {
       if (bug.active) {
         bug.setActive(false);
         this.tweens.add({
@@ -406,7 +411,7 @@ export default class BattleScene extends PreloaderAwareScene {
           alpha: 0.1,
         });
       }
-    });
+    }
   }
 
   private doGameOver() {
@@ -463,12 +468,12 @@ export default class BattleScene extends PreloaderAwareScene {
     if (this.gameOver) {
       return;
     }
-    this.swattables.children.iterate((swat: any) => {
-      const swattable = swat as SwattableObject;
+    for (const swat of this.swattables.getChildren()) {
+      const swattable = (swat as any) as SwattableObject;
       if (this.swatter.hoversOver(swattable)) {
         swattable.swat();
       }
-    });
+    }
   }
 
   private updateGameTimer() {

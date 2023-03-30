@@ -10,16 +10,16 @@ export default class Tempo {
 
   pulse(time: number) {
     if (this.phase === 0) {
-      this.phase = 1;
-      this.phase1();
-    } else if (time > 60 && this.phase === 1) {
-      this.endPhase();
-      this.phase = 2;
-      this.phase2();
-    } else if (time > 120 && this.phase === 2) {
-      this.endPhase();
       this.phase = 3;
       this.phase3();
+    // } else if (time > 60 && this.phase === 1) {
+    //   this.endPhase();
+    //   this.phase = 2;
+    //   this.phase2();
+    // } else if (time > 120 && this.phase === 2) {
+    //   this.endPhase();
+    //   this.phase = 3;
+    //   this.phase3();
     }
   }
 
@@ -68,6 +68,6 @@ export default class Tempo {
   }
 
   private phase3() {
-    // add boss battle
+    this.scene.createQueen();
   }
 }
