@@ -5,7 +5,7 @@ import { swatter, ui } from "../preloaders";
 import PreloaderAwareScene from "./PreloaderAwareScene";
 
 export default class MainMenuScene extends PreloaderAwareScene {
-  private buttons: SwattableObject[] = [];
+  private buttons: Button[] = [];
   private swatter: Swatter;
   private introSong: Phaser.Sound.BaseSound;
 
@@ -103,7 +103,7 @@ export default class MainMenuScene extends PreloaderAwareScene {
   private swat() {
     this.swatter.playSwatAnim();
     this.buttons.forEach((button) => {
-      if (this.swatter.hoversOver(button)) {
+      if (button.isUnderneath(this.swatter)) {
         button.swat();
       }
     });
@@ -118,7 +118,7 @@ export default class MainMenuScene extends PreloaderAwareScene {
     this.buttons.forEach((button: any) => {
       const uiButton = button as Phaser.GameObjects.Image;
       uiButton.setTint(0xffffff);
-      if (this.swatter.hoversOver(button)) {
+      if (button.isUnderneath(this.swatter)) {
         uiButton.setTint(0x66ff7f);
       }
     });

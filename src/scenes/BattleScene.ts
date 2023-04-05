@@ -469,7 +469,7 @@ export default class BattleScene extends PreloaderAwareScene {
   private swat() {
     this.swatter.playSwatAnim();
     this.buttons.forEach((button) => {
-      if (this.swatter.hoversOver(button)) {
+      if (button.isUnderneath(this.swatter)) {
         button.swat();
       }
     });
@@ -478,7 +478,7 @@ export default class BattleScene extends PreloaderAwareScene {
     }
     for (const swat of this.swattables.getChildren()) {
       const swattable = (swat as any) as SwattableObject;
-      if (this.swatter.hoversOver(swattable)) {
+      if (swattable.isUnderneath(this.swatter)) {
         swattable.swat();
       }
     }

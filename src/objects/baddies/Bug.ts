@@ -52,6 +52,10 @@ export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implement
     }
   }
 
+  isUnderneath(swatter: Swatter): boolean {
+    return Phaser.Geom.Intersects.RectangleToRectangle(this.getBounds(), swatter.getBounds());
+  }
+
   swat() {
     this.alive = false;
     this.emit('swat');

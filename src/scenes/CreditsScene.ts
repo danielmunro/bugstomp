@@ -122,14 +122,14 @@ export default class CreditsScene extends PreloaderAwareScene {
     this.swatter.setPosition(pointer.x, pointer.y + 16);
     const uiButton = this.backButton as Phaser.GameObjects.Image;
     uiButton.setTint(0xffffff);
-    if (this.swatter.hoversOver(this.backButton)) {
+    if (this.backButton.isUnderneath(this.swatter)) {
       uiButton.setTint(0x66ff7f);
     }
   }
 
   private swat() {
     this.swatter.playSwatAnim();
-    if (this.swatter.hoversOver(this.backButton)) {
+    if (this.backButton.isUnderneath(this.swatter)) {
       this.backButton.swat();
     }
   }

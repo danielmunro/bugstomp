@@ -10,8 +10,8 @@ export default class Tempo {
 
   pulse(time: number) {
     if (this.phase === 0) {
-      this.phase = 3;
-      this.phase3();
+      this.phase = 1;
+      this.phase1();
     // } else if (time > 60 && this.phase === 1) {
     //   this.endPhase();
     //   this.phase = 2;

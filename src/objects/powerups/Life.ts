@@ -1,5 +1,6 @@
 import SwattableObject from "../../interfaces/SwattableObject";
 import BattleScene from "../../scenes/BattleScene"
+import Swatter from "../Swatter";
 
 export default class Life extends Phaser.Physics.Arcade.Sprite implements SwattableObject {
   constructor(scene: BattleScene, group: Phaser.GameObjects.Group, x: number, y: number) {
@@ -9,6 +10,10 @@ export default class Life extends Phaser.Physics.Arcade.Sprite implements Swatta
     this.on('life', () => {
       scene.incrementLife();
     });
+  }
+
+  isUnderneath(swatter: Swatter): boolean {
+    return Phaser.Geom.Intersects.RectangleToRectangle(this.getBounds(), swatter.getBounds());
   }
 
   swat(): void {

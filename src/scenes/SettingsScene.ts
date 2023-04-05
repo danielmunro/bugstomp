@@ -1,16 +1,15 @@
 import Button from "../objects/ui/Button"
 import Swatter from "../objects/Swatter"
-import SwattableObject from "../interfaces/SwattableObject";
 import { swatter, ui } from "../preloaders";
 import PreloaderAwareScene from "./PreloaderAwareScene";
 import {chosenDifficulty, setDifficulty} from "../userConfig";
 
 export default class SettingsScene extends PreloaderAwareScene {
   private swatter: Swatter;
-  private buttons: Array<Phaser.GameObjects.Image> = [];
-  private easyButton: Phaser.GameObjects.Image;
-  private normalButton: Phaser.GameObjects.Image;
-  private hardButton: Phaser.GameObjects.Image;
+  private buttons: Array<Button> = [];
+  private easyButton: Button;
+  private normalButton: Button;
+  private hardButton: Button;
   private caratText: Phaser.GameObjects.Text;
 
   constructor() {
@@ -101,8 +100,7 @@ export default class SettingsScene extends PreloaderAwareScene {
     this.swatter.setPosition(pointer.x, pointer.y + 16);
     this.buttons.forEach((button) => {
       button.setTint(0xffffff);
-      const b = (button as any) as SwattableObject;
-      if (this.swatter.hoversOver(b)) {
+      if (button.isUnderneath(this.swatter)) {
         button.setTint(0x66ff7f);
       }
     });
@@ -123,9 +121,8 @@ export default class SettingsScene extends PreloaderAwareScene {
     this.swatter.playSwatAnim();
     this.buttons.forEach((button) => {
       button.setTint(0xffffff);
-      const b = (button as any) as SwattableObject;
-      if (this.swatter.hoversOver(b)) {
-        b.swat();
+      if (button.isUnderneath(this.swatter)) {
+        button.swat();
       }
     });
   }
