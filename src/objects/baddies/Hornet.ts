@@ -8,7 +8,7 @@ export default class Hornet extends Bug {
     }
 
     changeVelocity() {
-        if (this.active) {
+        if (this.active && this.alive) {
             const maxVelocity = getSettings().hornetMaxVelocity;
             const velocity = () => Phaser.Math.Between(-maxVelocity, maxVelocity);
             const xVelocity = velocity();

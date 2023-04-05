@@ -17,7 +17,7 @@ import {getSettings} from "../userConfig";
 import Beetle from "../objects/baddies/Beetle";
 import Tempo from "../Tempo";
 import Queen from "../objects/baddies/Queen";
-import GameObject = Phaser.GameObjects.GameObject;
+import Rectangle = Phaser.GameObjects.Rectangle;
 
 export default class BattleScene extends PreloaderAwareScene {
   private score = 0;
@@ -41,6 +41,8 @@ export default class BattleScene extends PreloaderAwareScene {
   private static maxScoreThisSession = 0;
   private background: Phaser.GameObjects.Image;
   private tempo = new Tempo(this);
+  private tracker: Rectangle;
+  private queen: Queen;
 
   constructor() {
     super('battle');
@@ -158,6 +160,10 @@ export default class BattleScene extends PreloaderAwareScene {
   }
 
   update() {
+    if (this.tracker && this.queen) {
+      this.tracker.x = this.queen.x;
+      this.tracker.y = this.queen.y;
+    }
     const pointer = this.input.activePointer;
     this.swatter.setPosition(pointer.x, pointer.y + 16);
     if (this.lifeAffect) {
@@ -350,7 +356,9 @@ export default class BattleScene extends PreloaderAwareScene {
 
   createQueen() {
     const x = width / 2, y = height / 2;
-    const queen = new Queen(this, this.swattables, x, y);
+    this.queen = new Queen(this, this.swattables, x, y);
+    // const bounds = this.queen.getBounds();
+    // this.tracker = this.add.rectangle(bounds.x, bounds.y, bounds.width, bounds.height, 0xff0000);
   }
 
   sendWave() {
