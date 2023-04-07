@@ -3,8 +3,9 @@ import BattleScene from "../../scenes/BattleScene";
 import GameObject = Phaser.GameObjects.GameObject;
 import Group = Phaser.GameObjects.Group;
 import {getSettings} from "../../userConfig";
+import SwattableObject from "../../interfaces/SwattableObject";
 
-export default class Queen extends Container {
+export default class Queen extends Container implements SwattableObject {
   constructor(scene: BattleScene, group: Group, x: number, y: number) {
     const wl = scene.add.image(15, 15, 'queen-legs-wings');
     const abdomen = scene.add.image(15, 47, 'queen-abdomen');
@@ -40,5 +41,9 @@ export default class Queen extends Container {
       this.body.velocity.y = velocity();
       // setTimeout(() => this.changeVelocity(), Phaser.Math.Between(3000, 5000));
     }
+  }
+
+  isUnderneath(): boolean {
+    return false;
   }
 }
