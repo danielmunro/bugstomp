@@ -161,18 +161,8 @@ export default class BattleScene extends PreloaderAwareScene {
   }
 
   update() {
-    if (this.queen) {
-      for (let hitBox of this.queen.getHitBounds()) {
-        this.add.rectangle(hitBox.x, hitBox.y, hitBox.width, hitBox.height, 0);
-      }
-    }
-    if (!this.tracker) {
-      this.tracker = this.add.rectangle(0, 0, this.swatter.width, this.swatter.height, 255);
-    }
     const pointer = this.input.activePointer;
     this.swatter.setPosition(pointer.x, pointer.y);
-    this.tracker.x = pointer.x;
-    this.tracker.y = pointer.y;
     if (this.lifeAffect) {
       this.lifeAffect.setPosition(pointer.x, pointer.y);
     }
@@ -490,8 +480,10 @@ export default class BattleScene extends PreloaderAwareScene {
     }
     for (const swat of this.swattables.getChildren()) {
       const swattable = (swat as any) as SwattableObject;
-      if (this.swatter.hoversOver(swattable)) {
-        swattable.swat();
+      for (const b of swattable.getHitBounds()) {
+        if (this.swatter.hoversOver(b)) {
+          swattable.swat();
+        }
       }
     }
   }

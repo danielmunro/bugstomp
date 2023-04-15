@@ -1,11 +1,9 @@
 import BattleScene from '../../scenes/BattleScene';
 import Bug from './Bug';
-import Swatter from "../Swatter";
-import ExplosionAffect from "../affects/ExplosionAffect";
-import Sprite = Phaser.Physics.Arcade.Sprite;
 
 export default class Dragonfly extends Bug {
-  private startOnLeft: boolean;
+  private readonly startOnLeft: boolean;
+
   constructor(scene: BattleScene, group: Phaser.GameObjects.Group, x: number, y: number) {
     super(scene, group, x, y, 'dragonfly', 10, 0, 1000);
     this.setCollideWorldBounds(false);

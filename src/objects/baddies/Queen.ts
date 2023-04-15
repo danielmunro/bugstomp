@@ -28,10 +28,9 @@ export default class Queen extends Bug {
   }
 
   getHitBounds(): Array<Rectangle> {
+    const bounds = this.getBounds();
     return [
-      new Rectangle(this.x + 40, this.y - 30, 20, 16),
-      new Rectangle(this.x + 40, this.y - 16, 28, 20),
-      new Rectangle(this.x + 41, this.y + 16, 36, 46),
+      new Rectangle(bounds.x + 20, bounds.y, bounds.width - 40, bounds.height),
     ];
   }
 }

@@ -1,9 +1,11 @@
 import SwattableObject from "../../interfaces/SwattableObject";
-import BattleScene from "../../scenes/BattleScene"
-import Swatter from "../Swatter";
+import BattleScene from "../../scenes/BattleScene";
+import Rectangle = Phaser.Geom.Rectangle;
+import {Powerup} from "./Powerup";
+import Group = Phaser.GameObjects.Group;
 
-export default class Bomb extends Phaser.Physics.Arcade.Sprite implements SwattableObject {
-  constructor(scene: BattleScene, group: Phaser.GameObjects.Group, x: number, y: number) {
+export default class Bomb extends Powerup implements SwattableObject {
+  constructor(scene: BattleScene, group: Group, x: number, y: number) {
     super(scene, x, y, 'bomb');
     scene.add.existing(this);
     group.add(this);
@@ -13,8 +15,8 @@ export default class Bomb extends Phaser.Physics.Arcade.Sprite implements Swatta
     });
   }
 
-  isUnderneath(swatter: Swatter): boolean {
-    return Phaser.Geom.Intersects.RectangleToRectangle(this.getBounds(), swatter.getBounds());
+  getHitBounds(): Array<Rectangle> {
+    return [this.getBounds()];
   }
 
   swat(): void {

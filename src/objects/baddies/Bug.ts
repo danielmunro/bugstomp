@@ -1,6 +1,7 @@
 import BattleScene from "../../scenes/BattleScene";
 import SwattableObject from "../../interfaces/SwattableObject";
 import {height} from "../../config";
+import Rectangle = Phaser.Geom.Rectangle;
 
 export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implements SwattableObject {
   protected readonly textureKey: string;
@@ -37,6 +38,10 @@ export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implement
   abstract changeVelocity(): void;
 
   abstract attack(): void;
+
+  getHitBounds(): Array<Rectangle> {
+    return [this.getBounds()];
+  }
 
   protected startLifecycle() {
     this.anims.play(this.textureKey, true);

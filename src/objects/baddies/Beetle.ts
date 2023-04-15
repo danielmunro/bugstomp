@@ -1,8 +1,5 @@
 import BattleScene from '../../scenes/BattleScene';
 import Bug from './Bug';
-import Swatter from "../Swatter";
-import ExplosionAffect from "../affects/ExplosionAffect";
-import {height} from "../../config";
 import {getSettings} from "../../userConfig";
 
 export default class Beetle extends Bug {

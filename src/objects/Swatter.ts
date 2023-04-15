@@ -1,5 +1,6 @@
 import {width, height} from '../config';
 import SwattableObject from "../interfaces/SwattableObject";
+import Rectangle = Phaser.Geom.Rectangle;
 
 export default class Swatter extends Phaser.Physics.Arcade.Sprite {
     poweredUp: boolean;
@@ -11,7 +12,7 @@ export default class Swatter extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
     }
 
-    hoversOver(sprite: SwattableObject) {
+    hoversOver(rectangle: Rectangle) {
         const pos = this.getBounds();
         const width = 20;
         const height = 17;
@@ -21,7 +22,7 @@ export default class Swatter extends Phaser.Physics.Arcade.Sprite {
         pos.width = this.poweredUp ? width * 1.5 : width;
         pos.x = pos.x + (this.poweredUp ? xOffset * 1.5 : xOffset);
         pos.y = pos.y + (this.poweredUp ? yOffset * 1.5 : yOffset);
-        return Phaser.Geom.Intersects.RectangleToRectangle(pos, sprite.getBounds());
+        return Phaser.Geom.Intersects.RectangleToRectangle(pos, rectangle);
     }
 
     playSwatAnim() {

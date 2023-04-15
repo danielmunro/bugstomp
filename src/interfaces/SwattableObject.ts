@@ -2,7 +2,7 @@ import Rectangle = Phaser.Geom.Rectangle;
 
 export default interface SwattableObject {
   swat(): void;
-  getBounds(): Rectangle;
+  getHitBounds(): Array<Rectangle>;
   x: number;
   y: number;
   active: boolean;
