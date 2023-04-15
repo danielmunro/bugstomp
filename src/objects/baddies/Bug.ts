@@ -1,7 +1,5 @@
 import BattleScene from "../../scenes/BattleScene";
 import SwattableObject from "../../interfaces/SwattableObject";
-import Swatter from "../Swatter";
-import ExplosionAffect from "../affects/ExplosionAffect";
 import {height} from "../../config";
 
 export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implements SwattableObject {
@@ -50,10 +48,6 @@ export default abstract class Bug extends Phaser.Physics.Arcade.Sprite implement
       this.anims.play(`${this.textureKey}-attacking`, true);
       setTimeout(() => this.attack(), this.attackTimeout);
     }
-  }
-
-  isUnderneath(swatter: Swatter): boolean {
-    return Phaser.Geom.Intersects.RectangleToRectangle(this.getBounds(), swatter.getBounds());
   }
 
   swat() {

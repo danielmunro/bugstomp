@@ -1,37 +1,21 @@
-import Container = Phaser.GameObjects.Container;
 import BattleScene from "../../scenes/BattleScene";
-import GameObject = Phaser.GameObjects.GameObject;
 import Group = Phaser.GameObjects.Group;
 import {getSettings} from "../../userConfig";
-import SwattableObject from "../../interfaces/SwattableObject";
+import Bug from "./Bug";
+import Rectangle = Phaser.Geom.Rectangle;
 
-export default class Queen extends Container implements SwattableObject {
+export default class Queen extends Bug {
   constructor(scene: BattleScene, group: Group, x: number, y: number) {
-    const wl = scene.add.image(15, 15, 'queen-legs-wings');
-    const abdomen = scene.add.image(15, 47, 'queen-abdomen');
-    const head = scene.add.image(15, 0, 'queen-head');
-    const thorax = scene.add.image(15, 15, 'queen-thorax');
-    const children: Array<GameObject> = [
-      wl,
-      abdomen,
-      head,
-      thorax,
-    ];
-    super(scene, x, y, children);
-    this.setInteractive(
-      new Phaser.Geom.Rectangle(-10, -20, 50, 100),
-      Phaser.Geom.Rectangle.Contains,
-    ).on('pointerup', () => {
-      console.log('yolo'); // queen hit
-    });
-    scene.add.existing(this);
-    group.add(this);
-    // this.changeVelocity();
-    scene.physics.world.enable(this);
-    (this.body as any).setBounce(1, 1).setCollideWorldBounds(true);
+    super(scene, group, x, y, 'queen', 10, 0, 1000);
   }
 
-  swat(): void {}
+  swat(): void {
+    console.log("SWAT called");
+  }
+
+  attack(): void {
+    throw new Error("Method not implemented.");
+  }
 
   changeVelocity() {
     if (this.active) {
@@ -43,7 +27,11 @@ export default class Queen extends Container implements SwattableObject {
     }
   }
 
-  isUnderneath(): boolean {
-    return false;
+  getHitBounds(): Array<Rectangle> {
+    return [
+      new Rectangle(this.x + 40, this.y - 30, 20, 16),
+      new Rectangle(this.x + 40, this.y - 16, 28, 20),
+      new Rectangle(this.x + 41, this.y + 16, 36, 46),
+    ];
   }
 }

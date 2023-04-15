@@ -1,8 +1,8 @@
-import Swatter from "../objects/Swatter";
+import Rectangle = Phaser.Geom.Rectangle;
 
 export default interface SwattableObject {
   swat(): void;
-  isUnderneath(swatter: Swatter): boolean;
+  getBounds(): Rectangle;
   x: number;
   y: number;
   active: boolean;
